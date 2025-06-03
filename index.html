@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login e Cadastro - Sistema Padaria</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="main-content-wrapper">
+    <div class="container auth-container">
+      <h2 class="bakery-title">Sistema Padaria</h2>
+      <p class="bakery-slogan">Sua gestão mais doce!</p>
+
+      <div class="box login-box">
+        <h3>Login</h3>
+        <input type="email" id="loginEmail" placeholder="Email" />
+        <input type="password" id="loginSenha" placeholder="Senha" />
+        <button onclick="fazerLogin()" class="btn-primary">Entrar</button>
+        <p id="mensagem" class="mensagem"></p>
+      </div>
+
+      <div class="signup-call">
+        <p>Não tem uma conta?</p>
+        <button onclick="mostrarCadastro()" class="btn-secondary">Crie uma conta</button>
+      </div>
+
+      <div class="box cadastro-box hidden">
+        <h3>Cadastro</h3>
+        <input type="text" id="cadNome" placeholder="Nome" />
+        <input type="email" id="cadEmail" placeholder="Email" />
+        <input type="password" id="cadSenha" placeholder="Senha" />
+        <button onclick="fazerCadastro()" class="btn-secondary">Cadastrar</button>
+        <p id="mensagemCadastro" class="mensagem"></p>
+        <button onclick="ocultarCadastro()" class="btn-text">Voltar ao Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Funções para mostrar/ocultar o formulário de cadastro
+    function mostrarCadastro() {
+      document.querySelector('.login-box').classList.add('hidden');
+      document.querySelector('.signup-call').classList.add('hidden');
+      document.querySelector('.cadastro-box').classList.remove('hidden');
+      // Limpa as mensagens de erro ou sucesso ao alternar
+      if (document.getElementById('mensagem')) document.getElementById('mensagem').innerText = '';
+      if (document.getElementById('mensagemCadastro')) document.getElementById('mensagemCadastro').innerText = '';
+    }
+
+    function ocultarCadastro() {
+      document.querySelector('.login-box').classList.remove('hidden');
+      document.querySelector('.signup-call').classList.remove('hidden');
+      document.querySelector('.cadastro-box').classList.add('hidden');
+      // Limpa as mensagens de erro ou sucesso ao alternar
+      if (document.getElementById('mensagem')) document.getElementById('mensagem').innerText = '';
+      if (document.getElementById('mensagemCadastro')) document.getElementById('mensagemCadastro').innerText = '';
+    }
+
+    // Adaptação da função mostrarMensagem para o cadastro
+    function mostrarMensagem(msg) {
+        const elLogin = document.getElementById("mensagem");
+        const elCadastro = document.getElementById("mensagemCadastro");
+
+        // Prioriza a mensagem no box de cadastro se ele estiver visível
+        if (elCadastro && !document.querySelector('.cadastro-box').classList.contains('hidden')) {
+            elCadastro.innerText = msg;
+            elCadastro.style.color = msg.includes("sucesso") ? 'green' : 'red'; // Cor condicional
+            setTimeout(() => { elCadastro.innerText = ""; elCadastro.style.color = ""; }, 4000);
+        } else if (elLogin) { // Caso contrário, mostra no box de login
+            elLogin.innerText = msg;
+            elLogin.style.color = msg.includes("sucesso") ? 'green' : 'red'; // Cor condicional
+            setTimeout(() => { elLogin.innerText = ""; elLogin.style.color = ""; }, 4000);
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relatórios - Sistema Padaria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2 class="bakery-title">Relatórios</h2>
+
+    <div class="card">
+      <h3>Filtros de Período</h3>
+      <div class="filters-section">
+        <label for="filtroPeriodo">Ver por:</label>
+        <select id="filtroPeriodo" onchange="alternarFiltroData()">
+          <option value="total">Total</option>
+          <option value="dia">Dia</option>
+          <option value="semana">Semana</option>
+          <option value="mes">Mês</option>
+          <option value="ano">Ano</option>
+        </select>
+
+        <div id="filtroDataEspecifica" style="display: none; margin-top: 10px;">
+          <label for="dataRelatorio">Selecione o Dia:</label>
+          <input type="date" id="dataRelatorio">
+        </div>
+
+        <button onclick="carregarRelatorios()" class="btn-secondary" style="margin-top: 15px;">Aplicar Filtro</button>
+      </div>
+    </div>
+
+    <div class="card" id="tendenciasCard">
+      <h3>Análise e Tendências</h3>
+      <div id="tendenciaVendas" class="relatorio-info">
+        <p><strong>Tendência de Vendas:</strong> <span id="textoTendenciaVendas">Carregando...</span></p>
+      </div>
+      <div id="tendenciaDespesas" class="relatorio-info">
+        <p><strong>Tendência de Despesas:</strong> <span id="textoTendenciaDespesas">Carregando...</span></p>
+      </div>
+      <div id="previsaoLucro" class="relatorio-info">
+        <p><strong>Previsão de Balanço para o próximo período:</strong> <span id="textoPrevisaoLucro">Carregando...</span></p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Resumo de Vendas e Despesas</h3>
+      <div class="relatorio-section">
+        <h4>Vendas</h4>
+        <p>Total de Vendas Registradas: <span id="totalVendas">0</span></p>
+        <p>Valor Total das Vendas: <span id="valorTotalVendas">R$ 0,00</span></p>
+        <div id="listaVendas" class="lista-itens">
+          </div>
+      </div>
+
+      <div class="relatorio-section">
+        <h4>Despesas</h4>
+        <p>Total de Despesas Registradas: <span id="totalDespesas">0</span></p>
+        <p>Valor Total das Despesas: <span id="valorTotalDespesas">R$ 0,00</span></p>
+        <div id="listaDespesas" class="lista-itens">
+          </div>
+      </div>
+
+      <div class="relatorio-section">
+        <h4>Balanço Geral</h4>
+        <p>Lucro/Prejuízo: <span id="balancoGeral">R$ 0,00</span></p>
+      </div>
+    </div>
+
+    <button onclick="voltarDashboard()" class="btn-secondary">Voltar ao Menu</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    if (!usuarioLogado) {
+      window.location.href = "index.html";
+    }
+
+    function voltarDashboard() {
+      window.location.href = "dashboard.html";
+    }
+
+    // Função para alternar a visibilidade do campo de data
+    function alternarFiltroData() {
+        const filtroPeriodo = document.getElementById("filtroPeriodo").value;
+        const filtroDataEspecificaDiv = document.getElementById("filtroDataEspecifica");
+        if (filtroPeriodo === 'dia') {
+            filtroDataEspecificaDiv.style.display = 'block';
+        } else {
+            filtroDataEspecificaDiv.style.display = 'none';
+            document.getElementById("dataRelatorio").value = ''; // Limpa a data ao mudar o filtro
+        }
+    }
+
+    // Define a data atual como valor padrão no input de data ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        document.getElementById("dataRelatorio").value = `${year}-${month}-${day}`;
+        alternarFiltroData(); // Para garantir que o campo de data aparece se o filtro inicial for 'dia'
+        carregarRelatorios(); // Carrega os relatórios ao iniciar
+    });
+  </script>
+</body>
+</html>
