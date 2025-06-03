@@ -264,58 +264,9 @@ function sugerirCategoriaDespesa() {
 
 // -------- Relatórios (MODIFICADO PARA FILTROS E TENDÊNCIAS) ---------
 
-async function getDadosFiltrados(colecao, usuarioEmail, filtroPeriodo, dataEspecifica) {
-    const dados = [];
-    const snapshot = await db.collection(colecao).get();
-    snapshot.forEach(doc => {
-        const dataItem = doc.data();
-        if (dataItem.UsuarioEmail === usuarioEmail) {
-            dados.push(dataItem);
-        }
-    });
-
-    // Filtra e ordena todos os dados do usuário, não apenas os do período atual
-    const dadosUsuarioOrdenados = dados.sort((a, b) => new Date(a.DataHora) - new Date(b.DataHora)); // Mais antigos primeiro
-
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Zera hora para comparação de dia
-
-    const dadosFiltradosPeriodoAtual = dadosUsuarioOrdenados.filter(item => {
-        const itemDate = new Date(item.DataHora);
-        itemDate.setHours(0, 0, 0, 0);
-
-        switch (filtroPeriodo) {
-            case 'total':
-                return true;
-            case 'dia':
-                const dataFiltro = new Date(dataEspecifica);
-                dataFiltro.setHours(0, 0, 0, 0);
-                return itemDate.getTime() === dataFiltro.getTime();
-            case 'semana':
-                const hojeSemana = new Date();
-                hojeSemana.setHours(0, 0, 0, 0);
-                const diaSemanaHoje = hojeSemana.getDay();
-                const inicioSemanaHoje = new Date(hojeSemana.setDate(hojeSemana.getDate() - diaSemanaHoje));
-
-                const fimSemanaHoje = new Date(inicioSemanaHoje);
-                fimSemanaHoje.setDate(inicioSemanaHoje.getDate() + 6);
-                fimSemanaHoje.setHours(23, 59, 59, 999);
-
-                return itemDate >= inicioSemanaHoje && itemDate <= fimSemanaHoje;
-            case 'mes':
-                const hojeMes = new Date();
-                return itemDate.getMonth() === hojeMes.getMonth() && itemDate.getFullYear() === hojeMes.getFullYear();
-            case 'ano':
-                const hojeAno = new Date();
-                return itemDate.getFullYear() === hojeAno.getFullYear();
-            default:
-                return true;
-        }
-    });
-
-    // Retorna apenas os dados do período atual (ordenados do mais recente ao mais antigo)
-    return dadosFiltradosPeriodoAtual.sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
-}
+// OBS: A função getDadosFiltrados não é mais usada diretamente para a filtragem principal dentro de carregarRelatorios
+// Ela pode ser útil para outros contextos, mas para o problema atual, o filtro ocorre diretamente em carregarRelatorios
+// removida temporariamente ou ajustada se houver um uso futuro.
 
 function formatarDataHora(isoString) {
     const date = new Date(isoString);
@@ -339,7 +290,8 @@ function calcularTotalValor(itens) {
 }
 
 // Função para analisar tendências e previsão
-function analisarTendenciasEPrevisao(todasVendas, todasDespesas, filtroPeriodo, dataSelecionada) {
+// Agora recebe os dados JÁ FILTRADOS para o período atual
+function analisarTendenciasEPrevisao(vendasPeriodoAtual, despesasPeriodoAtual, todasVendas, todasDespesas, filtroPeriodo, dataSelecionada) {
     let textoTendenciaVendas = "Não há dados suficientes.";
     let textoTendenciaDespesas = "Não há dados suficientes.";
     let textoPrevisaoLucro = "Não há dados suficientes.";
@@ -380,12 +332,9 @@ function analisarTendenciasEPrevisao(todasVendas, todasDespesas, filtroPeriodo, 
     };
 
     // Obter o valor do período atual
-    let valorPeriodoAtualVendas = calcularTotalValor(todasVendas.filter(item => {
-        return getDadosFiltrados("vendas", item.UsuarioEmail, filtroPeriodo, dataSelecionada).includes(item);
-    }));
-    let valorPeriodoAtualDespesas = calcularTotalValor(todasDespesas.filter(item => {
-        return getDadosFiltrados("despesas", item.UsuarioEmail, filtroPeriodo, dataSelecionada).includes(item);
-    }));
+    // Agora usando os arrays já filtrados passados como parâmetro
+    let valorPeriodoAtualVendas = calcularTotalValor(vendasPeriodoAtual);
+    let valorPeriodoAtualDespesas = calcularTotalValor(despesasPeriodoAtual);
 
 
     // Para tendências, precisamos do período anterior
@@ -410,6 +359,8 @@ function analisarTendenciasEPrevisao(todasVendas, todasDespesas, filtroPeriodo, 
                 break;
         }
 
+        // Aqui, passamos 'todasVendas' e 'todasDespesas' para obter o período anterior,
+        // pois a função `obterValorDoPeriodo` fará o filtro temporal
         valorPeriodoAnteriorVendas = obterValorDoPeriodo(todasVendas, filtroPeriodo, dataAnterior, dataAnterior.toISOString().split('T')[0]);
         valorPeriodoAnteriorDespesas = obterValorDoPeriodo(todasDespesas, filtroPeriodo, dataAnterior, dataAnterior.toISOString().split('T')[0]);
     }
@@ -601,5 +552,6 @@ async function carregarRelatorios() {
     balancoEl.style.color = balancoGeral >= 0 ? 'green' : 'red';
 
     // ---- CHAMADA PARA A ANÁLISE DE TENDÊNCIAS ----
-    analisarTendenciasEPrevisao(todasVendasUsuario, todasDespesasUsuario, filtroPeriodo, dataRelatorio || new Date().toISOString().split('T')[0]);
+    // Agora, passe os dados já filtrados do período atual para 'analisarTendenciasEPrevisao'
+    analisarTendenciasEPrevisao(vendasPeriodoAtual, despesasPeriodoAtual, todasVendasUsuario, todasDespesasUsuario, filtroPeriodo, dataRelatorio || new Date().toISOString().split('T')[0]);
 }
