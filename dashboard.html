@@ -5,24 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu - Sistema Padaria</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/SistemaPadaria/style.css" /> </head>
+  <link rel="stylesheet" href="/SistemaPadaria/style.css" />
+</head>
 <body>
-  <div class="container">
-    <h2 class="bakery-title">Bem-vindo, <span id="nomeUsuario"></span>! 🍞</h2>
+  <div class="main-content-wrapper"> <div class="container">
+      <h2 class="bakery-title">Bem-vindo, <span id="nomeUsuario"></span>! 🍞</h2>
 
-    <div class="card">
-      <h3>O que você deseja fazer?</h3>
-      <button onclick="irPara('vendas.html')" class="btn-primary">🛒 Registrar Vendas</button>
-      <button onclick="irPara('despesas.html')" class="btn-primary">💸 Registrar Despesas</button>
-      <button onclick="irPara('relatorios.html')" class="btn-primary">📊 Ver Relatórios</button>
+      <div class="card">
+        <h3>O que você deseja fazer?</h3>
+        <button onclick="irPara('vendas.html')" class="btn-primary">🛒 Registrar Vendas</button>
+        <button onclick="irPara('despesas.html')" class="btn-primary">💸 Registrar Despesas</button>
+        <button onclick="irPara('relatorios.html')" class="btn-primary">📊 Ver Relatórios</button>
+      </div>
+
+      <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
     </div>
-
-    <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+  </div> <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
-  <script src="/SistemaPadaria/script.js"></script> <script>
+  <script src="/SistemaPadaria/script.js"></script>
+  <script>
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     if (!usuarioLogado) {
       window.location.href = "index.html";
