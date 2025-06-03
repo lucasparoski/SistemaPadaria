@@ -265,8 +265,8 @@ function sugerirCategoriaDespesa() {
 // -------- Relatórios (MODIFICADO PARA FILTROS E TENDÊNCIAS) ---------
 
 // OBS: A função getDadosFiltrados não é mais usada diretamente para a filtragem principal dentro de carregarRelatorios
-// Ela pode ser útil para outros contextos, mas para o problema atual, o filtro ocorre diretamente em carregarRelatorios
-// removida temporariamente ou ajustada se houver um uso futuro.
+// Ela foi removida, pois a lógica de filtragem agora está incorporada diretamente em carregarRelatorios
+// e a função `obterValorDoPeriodo` (dentro de analisarTendenciasEPrevisao) cuida da filtragem para o período anterior.
 
 function formatarDataHora(isoString) {
     const date = new Date(isoString);
@@ -290,7 +290,8 @@ function calcularTotalValor(itens) {
 }
 
 // Função para analisar tendências e previsão
-// Agora recebe os dados JÁ FILTRADOS para o período atual
+// Agora recebe os dados JÁ FILTRADOS para o período atual (vendasPeriodoAtual, despesasPeriodoAtual)
+// E os dados completos do usuário para cálculo do período anterior (todasVendas, todasDespesas)
 function analisarTendenciasEPrevisao(vendasPeriodoAtual, despesasPeriodoAtual, todasVendas, todasDespesas, filtroPeriodo, dataSelecionada) {
     let textoTendenciaVendas = "Não há dados suficientes.";
     let textoTendenciaDespesas = "Não há dados suficientes.";
@@ -526,7 +527,7 @@ async function carregarRelatorios() {
     if (despesasPeriodoAtual.length === 0) {
         listaDespesasEl.innerHTML = '<p>Nenhuma despesa registrada neste período.</p>';
     } else {
-        despesasPeriodoAtual.forEach(despesa => {
+        despesasPeriodasAtual.forEach(despesa => {
             const despesaItemDiv = document.createElement('div');
             despesaItemDiv.classList.add('relatorio-item', 'card');
 
