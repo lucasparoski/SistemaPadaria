@@ -96,7 +96,9 @@ h2, h3 {
 
 
 input, select {
-  width: calc(100% - 24px); /* Ajusta a largura para o padding, talvez 12px de cada lado = 24px */
+  /* CORREÇÃO AQUI: box-sizing: border-box; e width: 100%; */
+  box-sizing: border-box; /* Isso faz com que padding e border sejam incluídos na largura */
+  width: 100%; /* Agora 100% incluirá padding e border */
   padding: 14px; /* Um pouco mais de padding */
   margin: 10px 0; /* Mais margem */
   border: 1px solid rgba(0,0,0,0.1); /* Borda mais suave */
