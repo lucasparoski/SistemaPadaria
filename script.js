@@ -264,10 +264,6 @@ function sugerirCategoriaDespesa() {
 
 // -------- Relatórios (MODIFICADO PARA FILTROS E TENDÊNCIAS) ---------
 
-// OBS: A função getDadosFiltrados não é mais usada diretamente para a filtragem principal dentro de carregarRelatorios
-// Ela foi removida, pois a lógica de filtragem agora está incorporada diretamente em carregarRelatorios
-// e a função `obterValorDoPeriodo` (dentro de analisarTendenciasEPrevisao) cuida da filtragem para o período anterior.
-
 function formatarDataHora(isoString) {
     const date = new Date(isoString);
     return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -527,7 +523,8 @@ async function carregarRelatorios() {
     if (despesasPeriodoAtual.length === 0) {
         listaDespesasEl.innerHTML = '<p>Nenhuma despesa registrada neste período.</p>';
     } else {
-        despesasPeriodasAtual.forEach(despesa => {
+        // CORRIGIDO: Nome da variável de 'despesasPeriodasAtual' para 'despesasPeriodoAtual'
+        despesasPeriodoAtual.forEach(despesa => {
             const despesaItemDiv = document.createElement('div');
             despesaItemDiv.classList.add('relatorio-item', 'card');
 
