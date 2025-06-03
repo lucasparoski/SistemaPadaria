@@ -262,7 +262,7 @@ function sugerirCategoriaDespesa() {
 }
 
 
-// -------- Relatórios (MODIFICADO PARA FILTROS E TENDÊNCIAS) ---------
+// -------- Relatórios (MODIFICADO PARA FILTROS) ---------
 
 function formatarDataHora(isoString) {
     const date = new Date(isoString);
@@ -285,124 +285,6 @@ function calcularTotalValor(itens) {
     }, 0);
 }
 
-// Função para analisar tendências e previsão
-// Agora recebe os dados JÁ FILTRADOS para o período atual (vendasPeriodoAtual, despesasPeriodoAtual)
-// E os dados completos do usuário para cálculo do período anterior (todasVendas, todasDespesas)
-function analisarTendenciasEPrevisao(vendasPeriodoAtual, despesasPeriodoAtual, todasVendas, todasDespesas, filtroPeriodo, dataSelecionada) {
-    let textoTendenciaVendas = "Não há dados suficientes.";
-    let textoTendenciaDespesas = "Não há dados suficientes.";
-    let textoPrevisaoLucro = "Não há dados suficientes.";
-
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    // Função interna para obter o valor total de um período específico
-    const obterValorDoPeriodo = (colecao, periodo, baseDate, dataEspecificaParam) => {
-        const dadosDoPeriodo = colecao.filter(item => {
-            const itemDate = new Date(item.DataHora);
-            itemDate.setHours(0, 0, 0, 0);
-
-            switch (periodo) {
-                case 'dia':
-                    const dataFiltro = new Date(dataEspecificaParam);
-                    dataFiltro.setHours(0, 0, 0, 0);
-                    return itemDate.getTime() === dataFiltro.getTime();
-                case 'semana':
-                    const inicioSemana = new Date(baseDate);
-                    inicioSemana.setHours(0, 0, 0, 0);
-                    const diaSemanaBase = inicioSemana.getDay();
-                    inicioSemana.setDate(inicioSemana.getDate() - diaSemanaBase);
-
-                    const fimSemana = new Date(inicioSemana);
-                    fimSemana.setDate(inicioSemana.getDate() + 6);
-                    fimSemana.setHours(23, 59, 59, 999);
-                    return itemDate >= inicioSemana && itemDate <= fimSemana;
-                case 'mes':
-                    return itemDate.getMonth() === baseDate.getMonth() && itemDate.getFullYear() === baseDate.getFullYear();
-                case 'ano':
-                    return itemDate.getFullYear() === baseDate.getFullYear();
-                default:
-                    return false; // Não deve acontecer para períodos específicos
-            }
-        });
-        return calcularTotalValor(dadosDoPeriodo);
-    };
-
-    // Obter o valor do período atual
-    // Agora usando os arrays já filtrados passados como parâmetro
-    let valorPeriodoAtualVendas = calcularTotalValor(vendasPeriodoAtual);
-    let valorPeriodoAtualDespesas = calcularTotalValor(despesasPeriodoAtual);
-
-
-    // Para tendências, precisamos do período anterior
-    let valorPeriodoAnteriorVendas = 0;
-    let valorPeriodoAnteriorDespesas = 0;
-
-    if (filtroPeriodo !== 'total') { // Não faz sentido para "Total"
-        let dataAnterior = new Date(dataSelecionada || hoje); // Usa a data selecionada ou hoje como base
-
-        switch (filtroPeriodo) {
-            case 'dia':
-                dataAnterior.setDate(dataAnterior.getDate() - 1);
-                break;
-            case 'semana':
-                dataAnterior.setDate(dataAnterior.getDate() - 7);
-                break;
-            case 'mes':
-                dataAnterior.setMonth(dataAnterior.getMonth() - 1);
-                break;
-            case 'ano':
-                dataAnterior.setFullYear(dataAnterior.getFullYear() - 1);
-                break;
-        }
-
-        // Aqui, passamos 'todasVendas' e 'todasDespesas' para obter o período anterior,
-        // pois a função `obterValorDoPeriodo` fará o filtro temporal
-        valorPeriodoAnteriorVendas = obterValorDoPeriodo(todasVendas, filtroPeriodo, dataAnterior, dataAnterior.toISOString().split('T')[0]);
-        valorPeriodoAnteriorDespesas = obterValorDoPeriodo(todasDespesas, filtroPeriodo, dataAnterior, dataAnterior.toISOString().split('T')[0]);
-    }
-
-    // Calcula Tendências
-    if (valorPeriodoAnteriorVendas > 0) {
-        const diffVendas = valorPeriodoAtualVendas - valorPeriodoAnteriorVendas;
-        const percentVendas = (diffVendas / valorPeriodoAnteriorVendas) * 100;
-        textoTendenciaVendas = `${formatarMoeda(diffVendas)} (${percentVendas.toFixed(2)}%) em relação ao período anterior.`;
-        textoTendenciaVendas += (diffVendas >= 0 ? " (Crescendo 📈)" : " (Diminuindo 📉)");
-    } else if (valorPeriodoAtualVendas > 0) {
-        textoTendenciaVendas = `Primeiras vendas registradas neste período: ${formatarMoeda(valorPeriodoAtualVendas)}.`;
-    }
-
-    if (valorPeriodoAnteriorDespesas > 0) {
-        const diffDespesas = valorPeriodoAtualDespesas - valorPeriodoAnteriorDespesas;
-        const percentDespesas = (diffDespesas / valorPeriodoAnteriorDespesas) * 100;
-        textoTendenciaDespesas = `${formatarMoeda(diffDespesas)} (${percentDespesas.toFixed(2)}%) em relação ao período anterior.`;
-        textoTendenciaDespesas += (diffDespesas >= 0 ? " (Aumentando ⬆️)" : " (Diminuindo ⬇️)");
-    } else if (valorPeriodoAtualDespesas > 0) {
-        textoTendenciaDespesas = `Primeiras despesas registradas neste período: ${formatarMoeda(valorPeriodoAtualDespesas)}.`;
-    }
-
-    // Previsão Básica (Média dos 2 últimos períodos)
-    // Isso é uma simplificação. Para uma previsão real, seria mais complexo.
-    if (filtroPeriodo !== 'total') {
-        if (valorPeriodoAnteriorVendas > 0 && valorPeriodoAnteriorDespesas > 0 && valorPeriodoAtualVendas > 0 && valorPeriodoAtualDespesas > 0) {
-            const mediaVendas = (valorPeriodoAtualVendas + valorPeriodoAnteriorVendas) / 2;
-            const mediaDespesas = (valorPeriodoAtualDespesas + valorPeriodoAnteriorDespesas) / 2;
-            const previsaoLucroValor = mediaVendas - mediaDespesas;
-            textoPrevisaoLucro = formatarMoeda(previsaoLucroValor);
-            textoPrevisaoLucro += (previsaoLucroValor >= 0 ? " (Potencial de Lucro ✅)" : " (Potencial de Prejuízo ❌)");
-        } else if (valorPeriodoAtualVendas > 0 || valorPeriodoAtualDespesas > 0) {
-             textoPrevisaoLucro = "Mais dados necessários para uma previsão confiável.";
-        }
-    } else {
-         textoPrevisaoLucro = "Previsão não aplicável para o filtro 'Total'.";
-    }
-
-    // Atualiza os elementos HTML
-    document.getElementById("textoTendenciaVendas").innerText = textoTendenciaVendas;
-    document.getElementById("textoTendenciaDespesas").innerText = textoTendenciaDespesas;
-    document.getElementById("textoPrevisaoLucro").innerText = textoPrevisaoLucro;
-}
-
 
 async function carregarRelatorios() {
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -414,8 +296,7 @@ async function carregarRelatorios() {
     const filtroPeriodo = document.getElementById("filtroPeriodo").value;
     const dataRelatorio = document.getElementById("dataRelatorio").value; // 'YYYY-MM-DD'
 
-    // Carrega TODOS os dados do usuário para a análise de tendências,
-    // pois a análise precisa do histórico, não apenas do período atual
+    // Carrega TODOS os dados do usuário
     const todasVendasUsuario = await db.collection("vendas").get().then(snapshot =>
         snapshot.docs.map(doc => doc.data()).filter(v => v.UsuarioEmail === usuarioLogado.Email).sort((a, b) => new Date(a.DataHora) - new Date(b.DataHora)) // Mais antigos primeiro
     );
@@ -549,7 +430,5 @@ async function carregarRelatorios() {
     const balancoEl = document.getElementById("balancoGeral");
     balancoEl.style.color = balancoGeral >= 0 ? 'green' : 'red';
 
-    // ---- CHAMADA PARA A ANÁLISE DE TENDÊNCIAS ----
-    // Agora, passe os dados já filtrados do período atual para 'analisarTendenciasEPrevisao'
-    analisarTendenciasEPrevisao(vendasPeriodoAtual, despesasPeriodoAtual, todasVendasUsuario, todasDespesasUsuario, filtroPeriodo, dataRelatorio || new Date().toISOString().split('T')[0]);
+    // REMOVIDO: A chamada para analisarTendenciasEPrevisao foi retirada.
 }
