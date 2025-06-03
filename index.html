@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login e Cadastro - Sistema Padaria</title>
-  <link rel="stylesheet" href="/SistemaPadaria/style.css" />
-</head>
+  <link rel="stylesheet" href="/SistemaPadaria/style.css" /> </head>
 <body>
   <div class="main-content-wrapper">
     <div class="container auth-container">
@@ -39,8 +38,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
-  <script src="/SistemaPadaria/script.js"></script>
-  <script>
+  <script src="/SistemaPadaria/script.js"></script> <script>
     // Funções para mostrar/ocultar o formulário de cadastro
     function mostrarCadastro() {
       document.querySelector('.login-box').classList.add('hidden');
@@ -69,11 +67,11 @@
         if (elCadastro && !document.querySelector('.cadastro-box').classList.contains('hidden')) {
             elCadastro.innerText = msg;
             elCadastro.style.color = msg.includes("sucesso") ? 'green' : 'red'; // Cor condicional
-            setTimeout(() => { elCadastro.innerText = "", elCadastro.style.color = ""; }, 4000);
+            setTimeout(() => { elCadastro.innerText = ""; elCadastro.style.color = ""; }, 4000);
         } else if (elLogin) { // Caso contrário, mostra no box de login
             elLogin.innerText = msg;
             elLogin.style.color = msg.includes("sucesso") ? 'green' : 'red'; // Cor condicional
-            setTimeout(() => { elLogin.innerText = ""; }, 4000);
+            setTimeout(() => { elLogin.innerText = ""; elLogin.style.color = ""; }, 4000);
         }
     }
   </script>
