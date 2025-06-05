@@ -66,7 +66,7 @@ body {
 }
 
 .header-logo { /* Estilo para o logo */
-    height: 50px; /* Ajuste o tamanho do logo conforme necessário */
+    height: 70px; /* AUMENTADO: Tamanho da logo */
     margin-right: 15px;
     vertical-align: middle;
 }
@@ -84,7 +84,7 @@ body {
     margin-right: 15px; /* Adiciona espaço para o separador */
 }
 
-/* NOVO: Estilo para o separador */
+/* Estilo para o separador */
 .header-separator {
     height: 1.8em; /* Altura aproximada do texto */
     border-left: 1px solid var(--cor-terciaria); /* Linha vertical clara */
@@ -92,7 +92,7 @@ body {
 }
 
 .header-slogan {
-    font-size: 2.6em; /* AUMENTADO: Tamanho da fonte do slogan */
+    font-size: 2.6em; /* Tamanho da fonte do slogan */
     margin: 0;
     opacity: 0.9;
     color: var(--cor-fundo-claro);
@@ -116,7 +116,7 @@ body {
     min-width: 280px;
     text-align: left;
     margin-top: 50px;
-    margin-bottom: 20px; /* REDUZIDO: Menos espaço abaixo da mensagem */
+    margin-bottom: 0px; /* REDUZIDO: Menos espaço abaixo da mensagem */
 }
 
 .welcome-message {
@@ -422,7 +422,7 @@ button {
 }
 
 
-.filters-section label, .filters-section select, .filters-section input [type="date"] {
+.filters-section label, .filters-section select, .filters-section input[type="date"] {
     margin-bottom: 15px;
 }
 
@@ -492,7 +492,7 @@ button {
         font-size: 2em;
     }
     .header-slogan {
-        font-size: 2.0em; /* Mantém o tamanho em telas menores para consistência */
+        font-size: 1.8em; /* Mantém o tamanho em telas menores para consistência */
         margin-left: 10px; /* Ajusta a margem do slogan em telas menores para ficar ao lado */
     }
     .welcome-message {
@@ -532,7 +532,7 @@ button {
         font-size: 1.8em;
     }
     .header-slogan {
-        font-size: 1.8em; /* Mantém o tamanho em telas pequenas também */
+        font-size: 1.6em; /* Mantém o tamanho em telas pequenas também */
         margin-left: 0; /* Remove a margem para telas muito pequenas, para ficar logo ao lado */
         margin-top: 5px; /* Adiciona uma pequena margem superior se empilhar para a linha de cima */
     }
