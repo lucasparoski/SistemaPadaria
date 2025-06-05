@@ -45,81 +45,87 @@ body {
     z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
     box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* NOVO: Alinha o conteúdo à esquerda */
     align-items: center;
     box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
 }
 
 .header-content {
-    max-width: 500px; /* Mesma largura máxima do seu wrapper de conteúdo */
+    max-width: 960px; /* Aumenta a largura para comportar o conteúdo alinhado à esquerda */
     width: 100%;
-    text-align: center;
+    text-align: left; /* NOVO: Alinha o texto à esquerda */
 }
 
 .header-title-group {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* NOVO: Alinha o conteúdo à esquerda */
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 0; /* Ajusta margem, slogan agora está dentro */
 }
 
-.header-icon {
-    font-size: 1.8em; /* Tamanho do ícone */
-    margin-right: 10px;
-    color: var(--cor-secundaria); /* Cor de destaque para o ícone */
+.header-logo { /* NOVO ESTILO PARA O LOGO */
+    height: 40px; /* Ajuste o tamanho do logo conforme necessário */
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+.header-text-group { /* NOVO: Agrupa o título e slogan */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .header-bakery-name {
-    font-family: 'Quicksand', cursive; /* Mantém a fonte da padaria */
-    font-size: 2.6em; /* AUMENTADO: Tamanho maior para o nome da padaria */
-    margin: 0; /* Remove margens padrão */
-    color: var(--cor-terciaria); /* Cor creme para o nome */
+    font-family: 'Quicksand', cursive;
+    font-size: 2.8em; /* AUMENTADO: Tamanho maior para o nome da padaria */
+    margin: 0;
+    color: var(--cor-terciaria);
 }
 
 .header-slogan {
     font-size: 1.0em;
     margin: 0;
     opacity: 0.9;
-    color: var(--cor-fundo-claro); /* Uma cor que se destaca mas é suave */
+    color: var(--cor-fundo-claro);
 }
 
-/* NOVO ESTILO: Container principal para o layout de duas colunas da dashboard */
+/* CONTAINER PRINCIPAL DO LAYOUT DE DUAS COLUNAS */
 .main-content-wrapper-layout {
     display: flex;
-    justify-content: center; /* Centraliza as duas colunas */
-    align-items: flex-start; /* Alinha o topo das colunas */
+    justify-content: center;
+    align-items: flex-start;
     width: 100%;
-    max-width: 900px; /* Largura máxima para o layout de duas colunas */
-    margin: 40px auto 20px auto; /* Margem superior e centralização */
-    padding: 0 20px; /* Padding nas laterais */
-    gap: 40px; /* Espaçamento entre as duas colunas */
+    max-width: 1200px; /* AUMENTADO: Largura máxima para o layout de duas colunas (acomoda 3 cards horiz.) */
+    margin: 40px auto 20px auto;
+    padding: 0 20px;
+    gap: 40px;
 }
 
 /* Seção de boas-vindas (coluna da esquerda) */
 .welcome-section {
-    flex: 1; /* Permite que cresça */
-    min-width: 280px; /* Largura mínima para a seção de boas-vindas */
-    text-align: left; /* Alinha o texto à esquerda */
-    margin-top: 50px; /* Ajuste para o texto de boas-vindas */
+    flex: 1;
+    min-width: 280px;
+    text-align: left;
+    margin-top: 50px;
 }
 
 .welcome-message {
     font-family: 'Quicksand', cursive;
-    font-size: 3.5em; /* Tamanho maior para a mensagem de boas-vindas */
+    font-size: 3.5em;
     line-height: 1.1;
     color: var(--cor-primaria);
-    margin: 0; /* Remove margens padrão */
+    margin: 0;
 }
 
 .welcome-message .welcome-bread-icon {
-    display: block; /* Quebra para a próxima linha */
-    font-size: 0.7em; /* Tamanho menor para o pão */
+    display: block;
+    font-size: 0.7em;
     margin-top: 10px;
 }
 
 /* Seção de ações (coluna da direita) */
 .actions-section-container {
-    flex: 0 0 400px; /* AUMENTADO: Largura fixa para a coluna de cards, para preencher melhor o espaço */
+    flex: 0 0 700px; /* AUMENTADO: Largura fixa para a coluna de cards, para 3 cards horizontais */
     background: var(--cor-terciaria);
     border-radius: 18px;
     padding: 30px;
@@ -138,24 +144,28 @@ body {
 
 .action-cards-wrapper {
     display: flex;
-    flex-direction: column; /* Empilha os cards um sobre o outro */
-    gap: 15px; /* Espaçamento entre os cards */
-    width: 100%; /* Ocupa a largura total do seu container */
-    margin-bottom: 25px; /* Espaço antes do botão de sair */
+    flex-direction: row; /* NOVO: Cards na horizontal */
+    flex-wrap: wrap; /* Permite que quebrem linha em telas menores */
+    justify-content: center; /* Centraliza os cards quando houver espaço */
+    gap: 20px; /* Espaçamento entre os cards */
+    width: 100%;
+    margin-bottom: 25px;
 }
 
 .action-card {
     background: var(--cor-fundo-claro);
-    padding: 25px 30px; /* AUMENTADO: Padding interno do card para preencher melhor */
+    padding: 25px 30px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 160px; /* AUMENTADO: Altura mínima para o card */
+    width: 200px; /* Largura base para cada card */
+    min-height: 180px; /* Ajuste a altura mínima */
     transition: var(--transicao-rapida);
-    border: 1px solid rgba(0,0,0,0.1); /* Borda sutil */
+    border: 1px solid rgba(0,0,0,0.1);
+    box-sizing: border-box; /* Inclui padding e border na largura */
 }
 
 .action-card:hover {
@@ -164,38 +174,36 @@ body {
 }
 
 .action-card .card-icon {
-    font-size: 2.5em; /* Tamanho do ícone nos cards */
+    font-size: 2.5em;
     color: var(--cor-secundaria);
     margin-bottom: 10px;
 }
 
 .action-card h4 {
     font-size: 1.3em;
-    margin-bottom: 10px; /* Ajustado para dar espaço à descrição */
+    margin-bottom: 10px;
     color: var(--cor-primaria);
 }
 
-/* NOVO ESTILO: Descrição dos cards de ação */
 .action-card .card-description {
     font-size: 0.95em;
     color: var(--cor-texto-escuro);
-    margin-bottom: 15px; /* Espaço antes do botão */
+    margin-bottom: 15px;
     text-align: center;
     line-height: 1.4;
 }
 
 .action-card button {
-    width: 85%; /* AUMENTADO: Ajusta a largura do botão dentro do card */
-    margin-top: 0; /* Remove margem superior extra do botão */
-    padding: 12px; /* Ajusta o padding do botão */
-    font-size: 1em; /* Ajusta o tamanho da fonte do botão */
+    width: 90%;
+    margin-top: 0;
+    padding: 12px;
+    font-size: 1em;
 }
 
-/* Botão Sair - Ajustado para ficar na coluna da direita */
 .logout {
-    margin-top: 0px; /* Ajusta a margem superior para ficar alinhado */
-    width: 100%; /* Ocupa a largura total do actions-section-container */
-    background-color: var(--cor-erro); /* Mantém a cor original */
+    margin-top: 0px;
+    width: 100%;
+    background-color: var(--cor-erro);
     color: var(--cor-texto-claro);
 }
 .logout:hover {
@@ -217,8 +225,7 @@ body {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* Ajustes gerais de texto/input/botão para as outras páginas */
-.bakery-title { /* Geral, para outras páginas */
+.bakery-title { /* Geral, para outras páginas (não a dashboard) */
     font-family: 'Quicksand', cursive;
     font-size: 2.8em;
     color: var(--cor-primaria);
@@ -226,7 +233,7 @@ body {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-.bakery-slogan { /* Geral, para outras páginas */
+.bakery-slogan { /* Geral, para outras páginas (não a dashboard) */
     font-size: 1.2em;
     color: var(--cor-secundaria);
     margin-bottom: 40px;
@@ -234,7 +241,7 @@ body {
     opacity: 0.8;
 }
 
-h2, h3 { /* Geral, para outras páginas (h3 também é usado na dashboard, mas com estilos específicos) */
+h2, h3 { /* Geral, para outras páginas (h3 na dashboard tem estilos específicos) */
   text-align: center;
   color: var(--cor-primaria);
   margin-top: 0;
@@ -420,82 +427,119 @@ button {
 
 
 /* Media Queries para Responsividade */
-@media (max-width: 850px) { /* Ajusta o layout para tablets e telas menores */
+@media (max-width: 992px) { /* Ajusta o layout para tablets maiores e telas menores de desktop */
     .main-content-wrapper-layout {
         flex-direction: column; /* Empilha as seções em coluna */
-        gap: 20px; /* Reduz o espaçamento */
-        align-items: center; /* Centraliza o conteúdo quando empilhado */
+        gap: 20px;
+        align-items: center;
     }
 
     .welcome-section {
-        text-align: center; /* Centraliza o texto de boas-vindas */
-        margin-top: 20px; /* Ajusta a margem */
+        text-align: center;
+        margin-top: 20px;
     }
 
     .welcome-message {
-        font-size: 2.8em; /* Reduz o tamanho da fonte */
+        font-size: 2.8em;
     }
 
     .welcome-message .welcome-bread-icon {
-        display: inline-block; /* Ícone volta para a linha */
+        display: inline-block;
         margin-top: 0;
-        margin-left: 10px; /* Espaçamento ao lado do texto */
+        margin-left: 10px;
     }
 
     .actions-section-container {
-        flex: none; /* Remove a flexibilidade */
-        width: 100%; /* Ocupa a largura total disponível */
-        max-width: 400px; /* Define uma largura máxima para a coluna de ações */
-        padding: 25px; /* Ajusta o padding */
+        flex: none;
+        width: 100%;
+        max-width: 600px; /* Permite que os 3 cards fiquem horizontalmente se tiver espaço */
+        padding: 25px;
+    }
+
+    .action-cards-wrapper {
+        justify-content: space-around; /* Distribui os cards na horizontal */
     }
 
     .action-card {
-        min-height: 120px; /* Ajusta a altura mínima do card */
-        padding: 15px;
+        width: 180px; /* Largura menor para cada card em telas menores */
+        min-height: 160px;
+        padding: 20px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) { /* Ajusta para tablets e smartphones maiores */
     body {
-        padding-top: 90px; /* Mais padding se o título e slogan empilharem */
+        padding-top: 80px;
     }
     .main-header {
         padding: 10px 15px;
     }
-    .header-bakery-name {
-        font-size: 1.5em;
+    .header-logo {
+        height: 35px;
+        margin-right: 10px;
     }
-    .header-icon {
-        font-size: 1.2em;
+    .header-bakery-name {
+        font-size: 2em;
+    }
+    .header-slogan {
+        font-size: 0.9em;
+    }
+    .welcome-message {
+        font-size: 2.5em;
+    }
+    .top-actions-header h3 {
+        font-size: 1.6em;
+    }
+    .action-card {
+        width: 48%; /* Duas cards por linha */
+        margin-bottom: 15px; /* Espaçamento entre as linhas de cards */
+    }
+    .action-cards-wrapper {
+        gap: 15px; /* Reduz o espaçamento entre cards */
+    }
+}
+
+@media (max-width: 480px) { /* Ajusta para smartphones */
+    body {
+        padding-top: 90px;
+    }
+    .main-header {
+        flex-direction: column; /* Empilha logo/nome e slogan */
+        padding: 10px;
+        align-items: flex-start; /* Alinha tudo à esquerda */
+    }
+    .header-title-group {
+        flex-direction: row; /* Mantém logo e nome na mesma linha */
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .header-logo {
+        height: 30px;
         margin-right: 8px;
+    }
+    .header-bakery-name {
+        font-size: 1.8em;
     }
     .header-slogan {
         font-size: 0.8em;
-    }
-    .header-title-group {
-        flex-direction: column; /* Empilha ícone e nome em telas muito pequenas */
-        margin-bottom: 2px;
-    }
-    .header-icon {
-        margin-right: 0;
-        margin-bottom: 5px; /* Espaço entre ícone e nome */
+        margin-left: 48px; /* Alinha o slogan com o nome */
     }
     .welcome-message {
-        font-size: 2.2em;
-    }
-    .top-actions-header h3 {
-        font-size: 1.5em;
-    }
-    .action-card .card-icon {
         font-size: 2em;
     }
-    .action-card h4 {
-        font-size: 1.2em;
+    .action-card {
+        width: 100%; /* Uma card por linha */
+        min-height: 140px;
+        padding: 15px;
+    }
+    .action-cards-wrapper {
+        gap: 10px;
+    }
+    .action-card .card-description {
+        font-size: 0.85em;
     }
     .action-card button {
         font-size: 0.9em;
-    }
-    .logout {
-        padding: 12px;
+        padding: 10px;
     }
 }

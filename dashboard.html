@@ -12,10 +12,12 @@
   <header class="main-header">
     <div class="header-content">
       <div class="header-title-group">
-        <i class="fas fa-bread-slice header-icon"></i>
-        <h1 class="header-bakery-name">Padaria Nova Esperança</h1>
+        <img src="/SistemaPadaria/imagens/logo-padaria.png" alt="Logo Padaria Nova Esperança" class="header-logo">
+        <div class="header-text-group">
+          <h1 class="header-bakery-name">Padaria Nova Esperança</h1>
+          <p class="header-slogan">Onde cada pão é um carinho.</p>
+        </div>
       </div>
-      <p class="header-slogan">Onde cada pão é um carinho.</p>
     </div>
   </header>
 
@@ -32,17 +34,20 @@
             <div class="card action-card">
               <i class="fas fa-shopping-cart card-icon"></i>
               <h4>Vendas</h4>
-              <p class="card-description">Registre todas as vendas de produtos e serviços.</p> <button onclick="irPara('vendas.html')" class="btn-primary">Registrar Vendas</button>
+              <p class="card-description">Registre todas as vendas de produtos e serviços.</p>
+              <button onclick="irPara('vendas.html')" class="btn-primary">Registrar Vendas</button>
             </div>
             <div class="card action-card">
               <i class="fas fa-money-bill-wave card-icon"></i>
               <h4>Despesas</h4>
-              <p class="card-description">Gerencie e categorize os gastos da sua padaria.</p> <button onclick="irPara('despesas.html')" class="btn-primary">Registrar Despesas</button>
+              <p class="card-description">Gerencie e categorize os gastos da sua padaria.</p>
+              <button onclick="irPara('despesas.html')" class="btn-primary">Registrar Despesas</button>
             </div>
             <div class="card action-card">
               <i class="fas fa-chart-bar card-icon"></i>
               <h4>Relatórios</h4>
-              <p class="card-description">Visualize o desempenho financeiro e o balanço.</p> <button onclick="irPara('relatorios.html')" class="btn-primary">Ver Relatórios</button>
+              <p class="card-description">Visualize o desempenho financeiro e o balanço.</p>
+              <button onclick="irPara('relatorios.html')" class="btn-primary">Ver Relatórios</button>
             </div>
         </div>
         <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
