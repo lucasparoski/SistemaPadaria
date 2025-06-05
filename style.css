@@ -45,41 +45,43 @@ body {
     z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
     box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
     display: flex;
-    justify-content: flex-start; /* NOVO: Alinha o conteúdo à esquerda */
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
     align-items: center;
     box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
 }
 
 .header-content {
-    max-width: 960px; /* Aumenta a largura para comportar o conteúdo alinhado à esquerda */
+    max-width: 1200px; /* Aumenta a largura para comportar o conteúdo alinhado à esquerda */
     width: 100%;
-    text-align: left; /* NOVO: Alinha o texto à esquerda */
+    text-align: left; /* Alinha o texto à esquerda */
+    margin: 0 auto; /* Centraliza o conteúdo dentro do cabeçalho */
 }
 
 .header-title-group {
     display: flex;
-    justify-content: flex-start; /* NOVO: Alinha o conteúdo à esquerda */
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
     align-items: center;
-    margin-bottom: 0; /* Ajusta margem, slogan agora está dentro */
+    margin-bottom: 0;
 }
 
-.header-logo { /* NOVO ESTILO PARA O LOGO */
-    height: 40px; /* Ajuste o tamanho do logo conforme necessário */
+.header-logo { /* Estilo para o logo */
+    height: 50px; /* Ajuste o tamanho do logo conforme necessário */
     margin-right: 15px;
     vertical-align: middle;
 }
 
-.header-text-group { /* NOVO: Agrupa o título e slogan */
+.header-text-group { /* Agrupa o título e slogan */
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row; /* ALTERADO: Mudar para row para manter na mesma linha */
+    align-items: baseline; /* Alinha pela base do texto */
 }
 
 .header-bakery-name {
     font-family: 'Quicksand', cursive;
-    font-size: 2.8em; /* AUMENTADO: Tamanho maior para o nome da padaria */
+    font-size: 2.8em; /* Tamanho maior para o nome da padaria */
     margin: 0;
     color: var(--cor-terciaria);
+    margin-right: 10px; /* Adiciona um pequeno espaço à direita do nome */
 }
 
 .header-slogan {
@@ -95,7 +97,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    max-width: 1200px; /* AUMENTADO: Largura máxima para o layout de duas colunas (acomoda 3 cards horiz.) */
+    max-width: 1200px; /* Largura máxima para o layout de duas colunas (acomoda 3 cards horiz.) */
     margin: 40px auto 20px auto;
     padding: 0 20px;
     gap: 40px;
@@ -125,7 +127,7 @@ body {
 
 /* Seção de ações (coluna da direita) */
 .actions-section-container {
-    flex: 0 0 700px; /* AUMENTADO: Largura fixa para a coluna de cards, para 3 cards horizontais */
+    flex: 0 0 700px; /* Largura fixa para a coluna de cards, para 3 cards horizontais */
     background: var(--cor-terciaria);
     border-radius: 18px;
     padding: 30px;
@@ -144,7 +146,7 @@ body {
 
 .action-cards-wrapper {
     display: flex;
-    flex-direction: row; /* NOVO: Cards na horizontal */
+    flex-direction: row; /* Cards na horizontal */
     flex-wrap: wrap; /* Permite que quebrem linha em telas menores */
     justify-content: center; /* Centraliza os cards quando houver espaço */
     gap: 20px; /* Espaçamento entre os cards */
@@ -474,7 +476,7 @@ button {
     .main-header {
         padding: 10px 15px;
     }
-    .header-logo {
+    .header-logo { /* Ajuste do logo em telas menores */
         height: 35px;
         margin-right: 10px;
     }
@@ -483,6 +485,7 @@ button {
     }
     .header-slogan {
         font-size: 0.9em;
+        margin-left: 10px; /* Ajusta a margem do slogan em telas menores para ficar ao lado */
     }
     .welcome-message {
         font-size: 2.5em;
@@ -522,7 +525,8 @@ button {
     }
     .header-slogan {
         font-size: 0.8em;
-        margin-left: 48px; /* Alinha o slogan com o nome */
+        margin-left: 0; /* Remove a margem para telas muito pequenas, para ficar logo ao lado */
+        margin-top: 5px; /* Adiciona uma pequena margem superior se empilhar para a linha de cima */
     }
     .welcome-message {
         font-size: 2em;
