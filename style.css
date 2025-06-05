@@ -30,6 +30,11 @@ body {
   margin: 0;
   color: var(--cor-texto-escuro);
   flex-direction: column;
+  /* Ajuste para o conteúdo principal para que não fique por baixo do cabeçalho fixo */
+  padding-top: 100px; /* Ajuste este valor se o cabeçalho ficar mais alto/baixo */
+  min-height: calc(100vh - 100px); /* Ajusta a altura mínima considerando o cabeçalho */
+  align-items: flex-start; /* Alinha o conteúdo ao topo após o padding */
+  padding-bottom: 20px; /* Adiciona um pouco de padding na parte inferior */
 }
 
 .main-content-wrapper {
@@ -41,6 +46,8 @@ body {
     max-width: 500px; /* Aumenta um pouco a largura máxima do wrapper */
     padding: 20px;
     box-sizing: border-box;
+    /* Como o padding-top está no body, talvez não precise de margin-top aqui */
+    margin-top: 0; /* Garante que não tenha margem empurrando para baixo */
 }
 
 .container {
@@ -311,10 +318,63 @@ button {
     font-size: 1.05em;
 }
 
+/* Estilos para o novo cabeçalho fixo */
+.main-header {
+    background-color: var(--cor-primaria); /* Usando a cor primária para o fundo */
+    color: var(--cor-texto-claro); /* Texto claro para contraste */
+    padding: 15px 20px;
+    width: 100%;
+    position: fixed; /* Torna o cabeçalho fixo na parte superior */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
+}
+
+.header-content {
+    max-width: 500px; /* Mesma largura máxima do seu wrapper de conteúdo */
+    width: 100%;
+    text-align: center;
+}
+
+.header-title-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.header-icon {
+    font-size: 1.8em; /* Tamanho do ícone */
+    margin-right: 10px;
+    color: var(--cor-secundaria); /* Cor de destaque para o ícone */
+}
+
+.header-bakery-name {
+    font-family: 'Quicksand', cursive; /* Mantém a fonte da padaria */
+    font-size: 2.2em; /* Tamanho maior para o nome da padaria */
+    margin: 0; /* Remove margens padrão */
+    color: var(--cor-terciaria); /* Cor creme para o nome */
+}
+
+.header-slogan {
+    font-size: 1.0em;
+    margin: 0;
+    opacity: 0.9;
+    color: var(--cor-fundo-claro); /* Uma cor que se destaca mas é suave */
+}
+
+
 /* Media Queries para Responsividade (adaptadas para o novo design) */
 @media (max-width: 768px) {
   body {
     padding: 20px;
+    padding-top: 80px; /* Ajusta o padding para cabeçalho menor em telas menores */
+    min-height: calc(100vh - 80px);
   }
   .main-content-wrapper {
     padding: 15px;
@@ -356,6 +416,18 @@ button {
         margin-right: 0;
         margin-left: 0;
     }
+    .main-header {
+        padding: 10px 15px;
+    }
+    .header-bakery-name {
+        font-size: 1.8em;
+    }
+    .header-icon {
+        font-size: 1.5em;
+    }
+    .header-slogan {
+        font-size: 0.9em;
+    }
 }
 
 @media (max-width: 480px) {
@@ -368,4 +440,26 @@ button {
   h2, h3 {
     font-size: 1.4em;
   }
+    .header-bakery-name {
+        font-size: 1.5em;
+    }
+    .header-icon {
+        font-size: 1.2em;
+        margin-right: 8px;
+    }
+    .header-slogan {
+        font-size: 0.8em;
+    }
+    .header-title-group {
+        flex-direction: column; /* Empilha ícone e nome em telas muito pequenas */
+        margin-bottom: 2px;
+    }
+    .header-icon {
+        margin-right: 0;
+        margin-bottom: 5px; /* Espaço entre ícone e nome */
+    }
+    body {
+        padding-top: 90px; /* Mais padding se o título e slogan empilharem */
+        min-height: calc(100vh - 90px);
+    }
 }

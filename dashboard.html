@@ -5,9 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu - Sistema Padaria</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/SistemaPadaria/style.css" /> </head>
+  <link rel="stylesheet" href="/SistemaPadaria/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
 <body>
-  <div class="main-content-wrapper"> <div class="container">
+  <header class="main-header">
+    <div class="header-content">
+      <div class="header-title-group">
+        <i class="fas fa-bread-slice header-icon"></i>
+        <h1 class="header-bakery-name">Padaria Nova Esperança</h1>
+      </div>
+      <p class="header-slogan">Onde cada pão é um carinho.</p>
+    </div>
+  </header>
+  <div class="main-content-wrapper">
+    <div class="container">
       <h2 class="bakery-title">Bem-vindo, <span id="nomeUsuario"></span>! 🍞</h2>
 
       <div class="card">
@@ -19,9 +31,11 @@
 
       <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
     </div>
-  </div> <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
-  <script src="/SistemaPadaria/script.js"></script> <script>
+  <script src="/SistemaPadaria/script.js"></script>
+  <script>
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     if (!usuarioLogado) {
       window.location.href = "index.html";
