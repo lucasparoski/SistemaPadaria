@@ -19,28 +19,33 @@
     </div>
   </header>
 
-  <div class="main-content-wrapper">
-    <h2 class="bakery-title welcome-message">Bem-vindo, <span id="nomeUsuario"></span>! 🍞</h2>
-
-    <div class="container main-actions-container">
-      <h3>O que você deseja fazer?</h3>
-      <div class="action-cards-wrapper"> <div class="card action-card">
-            <h4>Vendas</h4>
-            <button onclick="irPara('vendas.html')" class="btn-primary">🛒 Registrar Vendas</button>
-          </div>
-          <div class="card action-card">
-            <h4>Despesas</h4>
-            <button onclick="irPara('despesas.html')" class="btn-primary">💸 Registrar Despesas</button>
-          </div>
-          <div class="card action-card">
-            <h4>Relatórios</h4>
-            <button onclick="irPara('relatorios.html')" class="btn-primary">📊 Ver Relatórios</button>
-          </div>
-      </div>
+  <div class="main-content-wrapper-layout">
+    <div class="welcome-section">
+      <h2 class="bakery-title welcome-message">Bem-vindo, <span id="nomeUsuario"></span>! <span class="welcome-bread-icon">🍞</span></h2>
     </div>
 
-    <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
+    <div class="actions-section-container">
+        <div class="top-actions-header">
+            <h3>O que você deseja fazer?</h3>
+        </div>
+        <div class="action-cards-wrapper">
+            <div class="card action-card">
+              <i class="fas fa-shopping-cart card-icon"></i> <h4>Vendas</h4>
+              <button onclick="irPara('vendas.html')" class="btn-primary">Registrar Vendas</button>
+            </div>
+            <div class="card action-card">
+              <i class="fas fa-money-bill-wave card-icon"></i> <h4>Despesas</h4>
+              <button onclick="irPara('despesas.html')" class="btn-primary">Registrar Despesas</button>
+            </div>
+            <div class="card action-card">
+              <i class="fas fa-chart-bar card-icon"></i> <h4>Relatórios</h4>
+              <button onclick="irPara('relatorios.html')" class="btn-primary">Ver Relatórios</button>
+            </div>
+        </div>
+        <button class="btn-primary logout" onclick="fazerLogout()">Sair</button>
+    </div>
   </div>
+
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
   <script src="/SistemaPadaria/script.js"></script>

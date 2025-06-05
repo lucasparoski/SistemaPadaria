@@ -24,293 +24,13 @@ body {
   font-family: 'Quicksand', 'Segoe UI', 'Arial Rounded MT Bold', 'Inter', sans-serif;
   background: var(--cor-fundo-claro);
   display: flex;
-  /* Remover justify-content e align-items do body para maior controle do layout */
-  /* justify-content: center; */
-  /* align-items: center; */
+  flex-direction: column; /* Necessário para o cabeçalho fixo e o conteúdo abaixo */
   min-height: 100vh;
   margin: 0;
   color: var(--cor-texto-escuro);
-  flex-direction: column;
   /* Ajuste para o conteúdo principal para que não fique por baixo do cabeçalho fixo */
   padding-top: 100px; /* Ajuste este valor se o cabeçalho ficar mais alto/baixo */
   padding-bottom: 20px; /* Adiciona um pouco de padding na parte inferior */
-}
-
-.main-content-wrapper {
-    display: flex;
-    flex-direction: column; /* Alinha os itens internos (boas-vindas, container, logout) em coluna */
-    justify-content: center;
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    width: 100%;
-    max-width: 960px; /* Aumenta a largura máxima para acomodar 3 cards lado a lado */
-    padding: 20px;
-    box-sizing: border-box;
-    margin: 0 auto; /* Centraliza o wrapper na página */
-}
-
-.container {
-  background: var(--cor-terciaria);
-  border-radius: 18px;
-  padding: 40px; /* Aumenta o padding interno para mais "respiro" */
-  width: 100%; /* Mantém 100% da largura do .main-content-wrapper */
-  box-shadow: var(--sombra-suave);
-  text-align: center;
-  transition: var(--transicao-rapida);
-}
-.container:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-
-/* Estilo para títulos de padaria */
-.bakery-title {
-    font-family: 'Quicksand', cursive;
-    font-size: 2.8em;
-    color: var(--cor-primaria);
-    margin-bottom: 15px; /* Mais espaçamento abaixo do título */
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-}
-
-/* NOVO ESTILO: Mensagem de Boas-vindas */
-.welcome-message {
-    margin-top: 20px; /* Espaço abaixo do cabeçalho */
-    margin-bottom: 30px; /* Espaço antes dos cards de ação */
-    font-size: 2.5em; /* Ajusta o tamanho */
-    text-align: center;
-    color: var(--cor-primaria);
-}
-
-
-.bakery-slogan {
-    font-size: 1.2em;
-    color: var(--cor-secundaria);
-    margin-bottom: 40px;
-    font-style: italic;
-    opacity: 0.8;
-}
-
-h2, h3, h4 { /* Adicionado h4 para os títulos dos cards de ação */
-  text-align: center;
-  color: var(--cor-primaria);
-  margin-top: 0;
-  margin-bottom: 25px;
-}
-
-.box {
-  background: var(--cor-fundo-claro);
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 25px;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: var(--transicao-rapida);
-}
-.box:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-
-input, select {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 10px;
-  background: white;
-  color: var(--cor-texto-escuro);
-  font-size: 1.05em;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%238B4513%22%20d%3D%22M287%2C197.3L153.6%2C64c-3.1-3.1-8.2-3.1-11.3%2C0L0%2C197.3c-3.1%2C3.1-3.1%2C8.2%2C0%2C11.3s8.2%2C3.1%2C11.3%2C0L148%2C87.3c3.1-3.1%2C8.2-3.1%2C11.3%2C0L275.7%2C208.6c3.1%2C3.1%2C8.2%2C3.1%2C11.3%2C0C290.1%2C205.5%2C290.1%2C200.4%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-  background-size: 14px;
-  padding-right: 40px;
-}
-
-input::placeholder {
-  color: var(--cor-texto-escuro);
-  opacity: 0.6;
-}
-
-input:focus, select:focus {
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 8px rgba(139, 69, 19, 0.2);
-}
-
-label {
-  display: block;
-  text-align: left;
-  margin-top: 15px;
-  margin-bottom: 8px;
-  color: var(--cor-texto-escuro);
-  font-weight: bold;
-  font-size: 1em;
-}
-
-/* Botões */
-button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1.1em;
-  font-weight: bold;
-  transition: var(--transicao-rapida);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.btn-primary {
-  background-color: var(--cor-primaria);
-  color: var(--cor-texto-claro);
-}
-
-.btn-primary:hover {
-  background-color: #A0522D;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.btn-secondary {
-  background-color: var(--cor-secundaria);
-  color: var(--cor-texto-escuro);
-}
-
-.btn-secondary:hover {
-  background-color: #FFB380;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.btn-text {
-    background: none;
-    color: var(--cor-primaria);
-    border: none;
-    padding: 10px;
-    margin-top: 15px;
-    font-size: 0.95em;
-    text-decoration: none;
-    box-shadow: none;
-}
-
-.btn-text:hover {
-    color: var(--cor-secundaria);
-    text-decoration: underline;
-    transform: translateY(-1px);
-}
-
-.logout {
-  background-color: var(--cor-erro);
-  color: var(--cor-texto-claro);
-  margin-top: 30px;
-}
-
-.logout:hover {
-  background-color: #E55353;
-}
-
-#mensagem, #mensagemCadastro, #mensagemVenda, #mensagemDespesa {
-  margin-top: 20px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.05em;
-}
-
-/* Cores das mensagens (definidas no JS) */
-#mensagem.success, #mensagemCadastro.success, #mensagemVenda.success, #mensagemDespesa.success {
-    color: var(--cor-sucesso);
-}
-#mensagem.error, #mensagemCadastro.error, #mensagemVenda.error, #mensagemDespesa.error {
-    color: var(--cor-erro);
-}
-
-
-.card {
-  background: var(--cor-fundo-claro); /* Mudado para um fundo mais claro para contraste com o container */
-  padding: 25px; /* Mais padding */
-  border-radius: 18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Sombra mais sutil */
-  margin: 25px 0;
-  border: none;
-  transition: var(--transicao-rapida);
-}
-.card:hover {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
-}
-/* Estilos específicos para os botões dentro do card na dashboard */
-.card button {
-    margin-bottom: 0; /* Remove margem inferior para cards de ação */
-    margin-top: 15px; /* Adiciona margem superior para o botão */
-}
-/* Remove a media query anterior do card button para não conflitar com o novo layout */
-/* @media (min-width: 600px) { ... } */
-
-
-.relatorio-section {
-    padding: 20px;
-    border-bottom: 1px dashed rgba(0,0,0,0.15);
-    margin-bottom: 20px;
-}
-
-.relatorio-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.relatorio-item {
-    background: var(--cor-fundo-claro);
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border: none;
-    text-align: left;
-    transition: var(--transicao-rapida);
-}
-.relatorio-item:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    transform: translateY(-1px);
-}
-
-.relatorio-item p {
-    margin: 6px 0;
-    font-size: 0.95em;
-    color: var(--cor-texto-escuro);
-}
-
-.relatorio-info p {
-    font-size: 1em;
-    margin: 8px 0;
-}
-
-.relatorio-info strong {
-    color: var(--cor-primaria);
-}
-
-
-.filters-section label, .filters-section select, .filters-section input[type="date"] {
-    margin-bottom: 15px;
-}
-
-/* Ajustes para a dashboard (botões de menu) - Mover para dentro de .card button */
-/* Removida a regra duplicada aqui, movida para .card button */
-
-
-/* Estilo para links embutidos (como "Crie uma conta" na página de login) */
-.signup-call {
-    margin-top: 25px;
-    color: var(--cor-texto-escuro);
-}
-.signup-call p {
-    margin-bottom: 12px;
-    font-size: 1.05em;
 }
 
 /* Estilos para o novo cabeçalho fixo */
@@ -363,108 +83,355 @@ button {
     color: var(--cor-fundo-claro); /* Uma cor que se destaca mas é suave */
 }
 
-/* Estilos para os cards de ação (Vendas, Despesas, Relatórios) */
+/* NOVO ESTILO: Container principal para o layout de duas colunas da dashboard */
+.main-content-wrapper-layout {
+    display: flex;
+    justify-content: center; /* Centraliza as duas colunas */
+    align-items: flex-start; /* Alinha o topo das colunas */
+    width: 100%;
+    max-width: 900px; /* Largura máxima para o layout de duas colunas */
+    margin: 40px auto 20px auto; /* Margem superior e centralização */
+    padding: 0 20px; /* Padding nas laterais */
+    gap: 40px; /* Espaçamento entre as duas colunas */
+}
+
+/* Seção de boas-vindas (coluna da esquerda) */
+.welcome-section {
+    flex: 1; /* Permite que cresça */
+    min-width: 280px; /* Largura mínima para a seção de boas-vindas */
+    text-align: left; /* Alinha o texto à esquerda */
+    margin-top: 50px; /* Ajuste para o texto de boas-vindas */
+}
+
+.welcome-message {
+    font-family: 'Quicksand', cursive;
+    font-size: 3.5em; /* Tamanho maior para a mensagem de boas-vindas */
+    line-height: 1.1;
+    color: var(--cor-primaria);
+    margin: 0; /* Remove margens padrão */
+}
+
+.welcome-message .welcome-bread-icon {
+    display: block; /* Quebra para a próxima linha */
+    font-size: 0.7em; /* Tamanho menor para o pão */
+    margin-top: 10px;
+}
+
+/* Seção de ações (coluna da direita) */
+.actions-section-container {
+    flex: 0 0 350px; /* Não cresce, não encolhe, largura fixa */
+    background: var(--cor-terciaria);
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: var(--sombra-suave);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.top-actions-header h3 {
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: var(--cor-primaria);
+}
+
 .action-cards-wrapper {
     display: flex;
-    flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha em telas menores */
-    justify-content: space-around; /* Distribui os cards com espaço entre eles */
-    gap: 20px; /* Espaçamento entre os cards */
-    width: 100%;
-    margin-top: 0px; /* Ajuste a margem se precisar */
+    flex-direction: column; /* Empilha os cards um sobre o outro */
+    gap: 15px; /* Espaçamento entre os cards */
+    width: 100%; /* Ocupa a largura total do seu container */
+    margin-bottom: 25px; /* Espaço antes do botão de sair */
 }
 
 .action-card {
-    flex: 1 1 280px; /* Permite que os cards cresçam/diminuam, com base em 280px */
-    max-width: 30%; /* Três cards por linha em telas maiores */
-    box-sizing: border-box;
-    display: flex; /* Para alinhar o conteúdo do card */
+    background: var(--cor-fundo-claro);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Empurra o botão para baixo se o texto for curto */
-    padding: 30px 20px; /* Padding interno do card */
-    margin: 0; /* Remove a margem padrão do .card */
+    align-items: center;
+    justify-content: center;
+    min-height: 150px; /* Altura mínima para o card */
+    transition: var(--transicao-rapida);
+    border: 1px solid rgba(0,0,0,0.1); /* Borda sutil */
+}
+
+.action-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+}
+
+.action-card .card-icon {
+    font-size: 2.5em; /* Tamanho do ícone nos cards */
+    color: var(--cor-secundaria);
+    margin-bottom: 10px;
 }
 
 .action-card h4 {
-    margin-bottom: 20px; /* Espaço abaixo do título do card */
-    font-size: 1.5em; /* Tamanho do título do card */
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    color: var(--cor-primaria);
 }
 
-/* Media Queries para Responsividade (adaptadas para o novo design) */
-@media (max-width: 992px) { /* Ajuste para tablets e telas menores */
-    .action-card {
-        max-width: 45%; /* Dois cards por linha */
-    }
+.action-card button {
+    width: 90%; /* Ajusta a largura do botão dentro do card */
+    margin-top: 0; /* Remove margem superior extra do botão */
+    padding: 12px; /* Ajusta o padding do botão */
+    font-size: 1em; /* Ajusta o tamanho da fonte do botão */
 }
 
-@media (max-width: 768px) {
-    body {
-        padding: 20px;
-        padding-top: 80px; /* Ajusta o padding para cabeçalho menor em telas menores */
+/* Botão Sair - Ajustado para ficar na coluna da direita */
+.logout {
+    margin-top: 0px; /* Ajusta a margem superior para ficar alinhado */
+    width: 100%; /* Ocupa a largura total do actions-section-container */
+}
+
+
+/* Outros estilos existentes (mantidos e ajustados conforme necessário) */
+.container { /* Este estilo se aplica apenas para as páginas de vendas, despesas, relatórios e login agora */
+  /* Propriedades mantidas do seu CSS original */
+  background: var(--cor-terciaria);
+  border-radius: 18px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: var(--sombra-suave);
+  text-align: center;
+  transition: var(--transicao-rapida);
+}
+.container:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Ajustes gerais de texto/input/botão para as outras páginas */
+h2, h3 {
+  text-align: center;
+  color: var(--cor-primaria);
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.box {
+  background: var(--cor-fundo-claro);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: var(--transicao-rapida);
+}
+.box:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input, select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  background: white;
+  color: var(--cor-texto-escuro);
+  font-size: 1.05em;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%238B4513%22%20d%3D%22M287%2C197.3L153.6%2C64c-3.1-3.1-8.2-3.1-11.3%2C0L0%2C197.3c-3.1%2C3.1-3.1%2C8.2%2C0%2C11.3s8.2%2C3.1%2C11.3%2C0L148%2C87.3c3.1-3.1%2C8.2-3.1%2C11.3%2C0L275.7%2C208.6c3.1%2C3.1%2C8.2%2C3.1%2C11.3%2C0C290.1%2C205.5%2C290.1%2C200.4%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 14px;
+  padding-right: 40px;
+}
+
+input::placeholder {
+  color: var(--cor-texto-escuro);
+  opacity: 0.6;
+}
+
+input:focus, select:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 8px rgba(139, 69, 19, 0.2);
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  color: var(--cor-texto-escuro);
+  font-weight: bold;
+  font-size: 1em;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: var(--transicao-rapida);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-claro);
+}
+
+.btn-primary:hover {
+  background-color: #A0522D;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+  background-color: var(--cor-secundaria);
+  color: var(--cor-texto-escuro);
+}
+
+.btn-secondary:hover {
+  background-color: #FFB380;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-text {
+    background: none;
+    color: var(--cor-primaria);
+    border: none;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 0.95em;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.btn-text:hover {
+    color: var(--cor-secundaria);
+    text-decoration: underline;
+    transform: translateY(-1px);
+}
+
+#mensagem, #mensagemCadastro, #mensagemVenda, #mensagemDespesa {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.05em;
+}
+
+/* Cores das mensagens (definidas no JS) */
+#mensagem.success, #mensagemCadastro.success, #mensagemVenda.success, #mensagemDespesa.success {
+    color: var(--cor-sucesso);
+}
+#mensagem.error, #mensagemCadastro.error, #mensagemVenda.error, #mensagemDespesa.error {
+    color: var(--cor-erro);
+}
+
+.relatorio-section {
+    padding: 20px;
+    border-bottom: 1px dashed rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+}
+
+.relatorio-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.relatorio-item {
+    background: var(--cor-fundo-claro);
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: none;
+    text-align: left;
+    transition: var(--transicao-rapida);
+}
+.relatorio-item:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+}
+
+.relatorio-item p {
+    margin: 6px 0;
+    font-size: 0.95em;
+    color: var(--cor-texto-escuro);
+}
+
+.relatorio-info p {
+    font-size: 1em;
+    margin: 8px 0;
+}
+
+.relatorio-info strong {
+    color: var(--cor-primaria);
+}
+
+
+.filters-section label, .filters-section select, .filters-section input[type="date"] {
+    margin-bottom: 15px;
+}
+
+.signup-call {
+    margin-top: 25px;
+    color: var(--cor-texto-escuro);
+}
+.signup-call p {
+    margin-bottom: 12px;
+    font-size: 1.05em;
+}
+
+
+/* Media Queries para Responsividade */
+@media (max-width: 850px) { /* Ajusta o layout para tablets e telas menores */
+    .main-content-wrapper-layout {
+        flex-direction: column; /* Empilha as seções em coluna */
+        gap: 20px; /* Reduz o espaçamento */
+        align-items: center; /* Centraliza o conteúdo quando empilhado */
     }
-    .main-content-wrapper {
-        padding: 15px;
-        max-width: 98%;
+
+    .welcome-section {
+        text-align: center; /* Centraliza o texto de boas-vindas */
+        margin-top: 20px; /* Ajusta a margem */
     }
-    .container {
-        padding: 30px; /* Ajuste para telas menores */
+
+    .welcome-message {
+        font-size: 2.8em; /* Reduz o tamanho da fonte */
     }
-    .bakery-title {
-        font-size: 2.2em;
+
+    .welcome-message .welcome-bread-icon {
+        display: inline-block; /* Ícone volta para a linha */
+        margin-top: 0;
+        margin-left: 10px; /* Espaçamento ao lado do texto */
     }
-    .bakery-slogan {
-        font-size: 1.1em;
+
+    .actions-section-container {
+        flex: none; /* Remove a flexibilidade */
+        width: 100%; /* Ocupa a largura total disponível */
+        max-width: 400px; /* Define uma largura máxima para a coluna de ações */
+        padding: 25px; /* Ajusta o padding */
     }
-    h2, h3 {
-        font-size: 1.6em;
-    }
-    input, select, button {
-        font-size: 1em;
-        padding: 12px;
-    }
-    .btn-text {
-        padding: 8px;
-        font-size: 0.9em;
-    }
-    .card {
-        padding: 20px;
-        margin: 20px 0;
-    }
-    .relatorio-section {
-        padding: 15px;
-    }
-    .relatorio-item {
-        padding: 12px;
-    }
-    /* Garante que os botões voltem a ser 100% de largura em telas menores */
-    .card button {
-        width: 100%;
-    }
-    .main-header {
-        padding: 10px 15px;
-    }
-    .header-bakery-name {
-        font-size: 1.8em;
-    }
-    .header-icon {
-        font-size: 1.5em;
-    }
-    .header-slogan {
-        font-size: 0.9em;
-    }
+
     .action-card {
-        max-width: 100%; /* Um card por linha em telas pequenas */
+        min-height: 120px; /* Ajusta a altura mínima do card */
+        padding: 15px;
     }
 }
 
 @media (max-width: 480px) {
-    .bakery-title {
-        font-size: 2em;
+    body {
+        padding-top: 90px; /* Mais padding se o título e slogan empilharem */
     }
-    .bakery-slogan {
-        font-size: 1em;
-    }
-    h2, h3 {
-        font-size: 1.4em;
+    .main-header {
+        padding: 10px 15px;
     }
     .header-bakery-name {
         font-size: 1.5em;
@@ -484,10 +451,22 @@ button {
         margin-right: 0;
         margin-bottom: 5px; /* Espaço entre ícone e nome */
     }
-    body {
-        padding-top: 90px; /* Mais padding se o título e slogan empilharem */
-    }
     .welcome-message {
-        font-size: 1.8em;
+        font-size: 2.2em;
+    }
+    .top-actions-header h3 {
+        font-size: 1.5em;
+    }
+    .action-card .card-icon {
+        font-size: 2em;
+    }
+    .action-card h4 {
+        font-size: 1.2em;
+    }
+    .action-card button {
+        font-size: 0.9em;
+    }
+    .logout {
+        padding: 12px;
     }
 }
