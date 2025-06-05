@@ -24,30 +24,28 @@ body {
   font-family: 'Quicksand', 'Segoe UI', 'Arial Rounded MT Bold', 'Inter', sans-serif;
   background: var(--cor-fundo-claro);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  /* Remover justify-content e align-items do body para maior controle do layout */
+  /* justify-content: center; */
+  /* align-items: center; */
   min-height: 100vh;
   margin: 0;
   color: var(--cor-texto-escuro);
   flex-direction: column;
   /* Ajuste para o conteúdo principal para que não fique por baixo do cabeçalho fixo */
   padding-top: 100px; /* Ajuste este valor se o cabeçalho ficar mais alto/baixo */
-  min-height: calc(100vh - 100px); /* Ajusta a altura mínima considerando o cabeçalho */
-  align-items: flex-start; /* Alinha o conteúdo ao topo após o padding */
   padding-bottom: 20px; /* Adiciona um pouco de padding na parte inferior */
 }
 
 .main-content-wrapper {
     display: flex;
+    flex-direction: column; /* Alinha os itens internos (boas-vindas, container, logout) em coluna */
     justify-content: center;
-    align-items: center;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
     width: 100%;
-    /* Ajuste para uma largura máxima mais controlada para o conteúdo principal */
-    max-width: 500px; /* Aumenta um pouco a largura máxima do wrapper */
+    max-width: 960px; /* Aumenta a largura máxima para acomodar 3 cards lado a lado */
     padding: 20px;
     box-sizing: border-box;
-    /* Como o padding-top está no body, talvez não precise de margin-top aqui */
-    margin-top: 0; /* Garante que não tenha margem empurrando para baixo */
+    margin: 0 auto; /* Centraliza o wrapper na página */
 }
 
 .container {
@@ -73,6 +71,16 @@ body {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
+/* NOVO ESTILO: Mensagem de Boas-vindas */
+.welcome-message {
+    margin-top: 20px; /* Espaço abaixo do cabeçalho */
+    margin-bottom: 30px; /* Espaço antes dos cards de ação */
+    font-size: 2.5em; /* Ajusta o tamanho */
+    text-align: center;
+    color: var(--cor-primaria);
+}
+
+
 .bakery-slogan {
     font-size: 1.2em;
     color: var(--cor-secundaria);
@@ -81,7 +89,7 @@ body {
     opacity: 0.8;
 }
 
-h2, h3 {
+h2, h3, h4 { /* Adicionado h4 para os títulos dos cards de ação */
   text-align: center;
   color: var(--cor-primaria);
   margin-top: 0;
@@ -238,24 +246,11 @@ button {
 }
 /* Estilos específicos para os botões dentro do card na dashboard */
 .card button {
-    margin-bottom: 15px; /* Mais espaçamento entre botões */
-    /* Para telas maiores, podemos fazer os botões ficarem lado a lado */
-    display: block; /* Garante que continuem em bloco por padrão */
+    margin-bottom: 0; /* Remove margem inferior para cards de ação */
+    margin-top: 15px; /* Adiciona margem superior para o botão */
 }
-.card button:last-child {
-    margin-bottom: 0;
-}
-@media (min-width: 600px) { /* Exemplo: a partir de tablets */
-    .card button {
-        width: 48%; /* Dois botões por linha, com um pequeno espaço */
-        display: inline-block; /* Permite que fiquem lado a lado */
-        margin-right: 1%; /* Espaço entre eles */
-        margin-left: 1%; /* Espaço entre eles */
-    }
-    .card button:nth-child(2n) { /* Ajusta a margem do segundo botão na linha */
-        margin-right: 0;
-    }
-}
+/* Remove a media query anterior do card button para não conflitar com o novo layout */
+/* @media (min-width: 600px) { ... } */
 
 
 .relatorio-section {
@@ -320,7 +315,7 @@ button {
 
 /* Estilos para o novo cabeçalho fixo */
 .main-header {
-    background-color: var(--cor-primaria); /* Usando a cor primária para o fundo */
+    background-color: var(--cor-primaria); /* Usa a cor primária para o fundo do cabeçalho */
     color: var(--cor-texto-claro); /* Texto claro para contraste */
     padding: 15px 20px;
     width: 100%;
@@ -368,53 +363,81 @@ button {
     color: var(--cor-fundo-claro); /* Uma cor que se destaca mas é suave */
 }
 
+/* Estilos para os cards de ação (Vendas, Despesas, Relatórios) */
+.action-cards-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha em telas menores */
+    justify-content: space-around; /* Distribui os cards com espaço entre eles */
+    gap: 20px; /* Espaçamento entre os cards */
+    width: 100%;
+    margin-top: 0px; /* Ajuste a margem se precisar */
+}
+
+.action-card {
+    flex: 1 1 280px; /* Permite que os cards cresçam/diminuam, com base em 280px */
+    max-width: 30%; /* Três cards por linha em telas maiores */
+    box-sizing: border-box;
+    display: flex; /* Para alinhar o conteúdo do card */
+    flex-direction: column;
+    justify-content: space-between; /* Empurra o botão para baixo se o texto for curto */
+    padding: 30px 20px; /* Padding interno do card */
+    margin: 0; /* Remove a margem padrão do .card */
+}
+
+.action-card h4 {
+    margin-bottom: 20px; /* Espaço abaixo do título do card */
+    font-size: 1.5em; /* Tamanho do título do card */
+}
 
 /* Media Queries para Responsividade (adaptadas para o novo design) */
+@media (max-width: 992px) { /* Ajuste para tablets e telas menores */
+    .action-card {
+        max-width: 45%; /* Dois cards por linha */
+    }
+}
+
 @media (max-width: 768px) {
-  body {
-    padding: 20px;
-    padding-top: 80px; /* Ajusta o padding para cabeçalho menor em telas menores */
-    min-height: calc(100vh - 80px);
-  }
-  .main-content-wrapper {
-    padding: 15px;
-    max-width: 98%;
-  }
-  .container {
-    padding: 30px; /* Ajuste para telas menores */
-  }
-  .bakery-title {
-    font-size: 2.2em;
-  }
-  .bakery-slogan {
-    font-size: 1.1em;
-  }
-  h2, h3 {
-    font-size: 1.6em;
-  }
-  input, select, button {
-    font-size: 1em;
-    padding: 12px;
-  }
-  .btn-text {
-      padding: 8px;
-      font-size: 0.9em;
-  }
-  .card {
-    padding: 20px;
-    margin: 20px 0;
-  }
-  .relatorio-section {
-    padding: 15px;
-  }
-  .relatorio-item {
-    padding: 12px;
-  }
-  /* Garante que os botões voltem a ser 100% de largura em telas menores */
-  .card button {
+    body {
+        padding: 20px;
+        padding-top: 80px; /* Ajusta o padding para cabeçalho menor em telas menores */
+    }
+    .main-content-wrapper {
+        padding: 15px;
+        max-width: 98%;
+    }
+    .container {
+        padding: 30px; /* Ajuste para telas menores */
+    }
+    .bakery-title {
+        font-size: 2.2em;
+    }
+    .bakery-slogan {
+        font-size: 1.1em;
+    }
+    h2, h3 {
+        font-size: 1.6em;
+    }
+    input, select, button {
+        font-size: 1em;
+        padding: 12px;
+    }
+    .btn-text {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+    .card {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    .relatorio-section {
+        padding: 15px;
+    }
+    .relatorio-item {
+        padding: 12px;
+    }
+    /* Garante que os botões voltem a ser 100% de largura em telas menores */
+    .card button {
         width: 100%;
-        margin-right: 0;
-        margin-left: 0;
     }
     .main-header {
         padding: 10px 15px;
@@ -428,18 +451,21 @@ button {
     .header-slogan {
         font-size: 0.9em;
     }
+    .action-card {
+        max-width: 100%; /* Um card por linha em telas pequenas */
+    }
 }
 
 @media (max-width: 480px) {
-  .bakery-title {
-    font-size: 2em;
-  }
-  .bakery-slogan {
-    font-size: 1em;
-  }
-  h2, h3 {
-    font-size: 1.4em;
-  }
+    .bakery-title {
+        font-size: 2em;
+    }
+    .bakery-slogan {
+        font-size: 1em;
+    }
+    h2, h3 {
+        font-size: 1.4em;
+    }
     .header-bakery-name {
         font-size: 1.5em;
     }
@@ -460,6 +486,8 @@ button {
     }
     body {
         padding-top: 90px; /* Mais padding se o título e slogan empilharem */
-        min-height: calc(100vh - 90px);
+    }
+    .welcome-message {
+        font-size: 1.8em;
     }
 }
