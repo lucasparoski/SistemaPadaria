@@ -4,6 +4,7 @@
 :root {
     /* Paleta de Cores baseada na imagem da padaria */
     --cor-primaria: #8B4513; /* Marrom (terra, café) - Mantido, é a identidade */
+    --cor-primaria-clara: #A0522D; /* Novo: Tom mais claro de marrom */
     --cor-secundaria: #F4A460; /* Laranja suave (pão, trigo) - Mantido */
     --cor-terciaria: #FFF8DC; /* Creme (leite, pão) - Mantido */
     --cor-fundo-claro: #FDF5E6; /* Bege claro - Mantido */
@@ -72,7 +73,6 @@ body {
 
 .header-text-group { /* Agrupa o título e slogan */
     display: flex;
-    flex-direction: row; /* ALTERADO: Mudar para row para manter na mesma linha */
     align-items: baseline; /* Alinha pela base do texto */
 }
 
@@ -81,11 +81,18 @@ body {
     font-size: 2.8em; /* Tamanho maior para o nome da padaria */
     margin: 0;
     color: var(--cor-terciaria);
-    margin-right: 10px; /* Adiciona um pequeno espaço à direita do nome */
+    margin-right: 15px; /* Adiciona espaço para o separador */
+}
+
+/* NOVO: Estilo para o separador */
+.header-separator {
+    height: 1.8em; /* Altura aproximada do texto */
+    border-left: 1px solid var(--cor-terciaria); /* Linha vertical clara */
+    margin-right: 15px;
 }
 
 .header-slogan {
-    font-size: 1.0em;
+    font-size: 2.6em; /* AUMENTADO: Tamanho da fonte do slogan */
     margin: 0;
     opacity: 0.9;
     color: var(--cor-fundo-claro);
@@ -109,6 +116,7 @@ body {
     min-width: 280px;
     text-align: left;
     margin-top: 50px;
+    margin-bottom: 20px; /* REDUZIDO: Menos espaço abaixo da mensagem */
 }
 
 .welcome-message {
@@ -324,7 +332,7 @@ button {
 }
 
 .btn-primary:hover {
-  background-color: #A0522D;
+  background-color: var(--cor-primaria-clara); /* Usando o tom mais claro */
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
@@ -414,7 +422,7 @@ button {
 }
 
 
-.filters-section label, .filters-section select, .filters-section input[type="date"] {
+.filters-section label, .filters-section select, .filters-section input [type="date"] {
     margin-bottom: 15px;
 }
 
@@ -484,7 +492,7 @@ button {
         font-size: 2em;
     }
     .header-slogan {
-        font-size: 0.9em;
+        font-size: 2.0em; /* Mantém o tamanho em telas menores para consistência */
         margin-left: 10px; /* Ajusta a margem do slogan em telas menores para ficar ao lado */
     }
     .welcome-message {
@@ -524,7 +532,7 @@ button {
         font-size: 1.8em;
     }
     .header-slogan {
-        font-size: 0.8em;
+        font-size: 1.8em; /* Mantém o tamanho em telas pequenas também */
         margin-left: 0; /* Remove a margem para telas muito pequenas, para ficar logo ao lado */
         margin-top: 5px; /* Adiciona uma pequena margem superior se empilhar para a linha de cima */
     }
