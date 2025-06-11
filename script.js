@@ -13,6 +13,12 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();
 
+// Váriavel para guardar os dados do relatório atual e serem usados pela função de cópia
+let dadosRelatorioAtual = {
+    vendas: [],
+    despesas: []
+};
+
 // -------- Funções de Utilidade --------
 function formatarDataHora(isoString) {
     if (!isoString) return 'Data inválida';
@@ -25,25 +31,19 @@ function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// -------- FUNÇÃO DE "IA" PARA NORMALIZAR NOMES DE PRODUTOS --------
-/**
- * Normaliza o nome de um produto para contagem.
- * Ex: "Pão Francês" -> "pao frances"
- * @param {string} nome O nome do produto.
- * @returns {string} O nome normalizado.
- */
 function normalizarNomeProduto(nome) {
     if (!nome) return '';
     return nome
         .toString()
         .toLowerCase()
         .trim()
-        .normalize('NFD') // Separa os acentos das letras
-        .replace(/[\u0300-\u036f]/g, ''); // Remove os acentos
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
 }
 
 
 // -------- Usuários ---------
+// ... (código de usuário sem alterações)
 async function getUsuarios() {
     try {
         const snapshot = await db.collection("usuarios").get();
@@ -128,7 +128,9 @@ function limparCamposCadastro() {
     document.getElementById("cadSenha").value = "";
 }
 
+
 // -------- LÓGICA DE VENDAS (CARRINHO) ---------
+// ... (código de vendas sem alterações)
 let pedidoAtual = JSON.parse(sessionStorage.getItem('pedidoAtual')) || [];
 
 function adicionarItem() {
@@ -250,7 +252,9 @@ function mostrarMensagemVenda(msg) {
     setTimeout(() => { el.innerText = ""; }, 4000);
 }
 
+
 // -------- Despesas ---------
+// ... (código de despesas sem alterações)
 async function salvarDespesa(despesa) {
     try {
         await db.collection("despesas").add(despesa);
@@ -336,6 +340,52 @@ function sugerirCategoriaDespesa() {
 }
 
 
+// -------- NOVA FUNÇÃO PARA COPIAR ANÁLISE PARA IA --------
+async function copiarAnaliseParaIA() {
+    const botao = document.getElementById('btnCopiarAnalise');
+    if (dadosRelatorioAtual.vendas.length === 0) {
+        alert("Não há dados de vendas no período selecionado para analisar.");
+        return;
+    }
+
+    // Formata os dados de vendas para texto
+    const dadosFormatados = dadosRelatorioAtual.vendas.map(venda => {
+        const itens = venda.itens.map(item => `${item.unidade}x ${item.nome}`).join(', ');
+        return `- Em ${formatarDataHora(venda.DataHora)}, pedido de ${formatarMoeda(venda.valorTotal)} via ${venda.formaPagamento}. Itens: ${itens}.`;
+    }).join('\n');
+
+    // Cria o prompt completo
+    const promptParaIA = `
+Por favor, analise os seguintes dados brutos de vendas de uma padaria.
+
+## DADOS DE VENDAS
+${dadosFormatados}
+
+## PEDIDO
+Com base nos dados fornecidos, responda às seguintes perguntas:
+1.  **Ranking de Produtos:** Quais são os 3 produtos mais vendidos em quantidade total?
+2.  **Desempenho Financeiro:** Qual foi o valor total vendido no período?
+3.  **Análise de Pagamento:** Qual a forma de pagamento mais utilizada?
+4.  **Insights e Sugestões:** Você identifica algum padrão interessante? (Ex: produtos que são vendidos juntos, horários de pico, etc.). Baseado nisso, você tem alguma sugestão para a padaria?
+`;
+
+    // Copia para a área de transferência
+    try {
+        await navigator.clipboard.writeText(promptParaIA.trim());
+        const textoOriginal = botao.innerText;
+        botao.innerText = "Copiado com Sucesso!";
+        botao.style.backgroundColor = '#4CAF50'; // Verde sucesso
+        setTimeout(() => {
+            botao.innerText = textoOriginal;
+            botao.style.backgroundColor = ''; // Volta à cor original
+        }, 3000);
+    } catch (err) {
+        console.error('Erro ao copiar para a área de transferência:', err);
+        alert('Não foi possível copiar os dados. Verifique as permissões do navegador.');
+    }
+}
+
+
 // -------- Relatórios (LÓGICA ATUALIZADA) ---------
 async function carregarRelatorios() {
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -386,9 +436,9 @@ async function carregarRelatorios() {
          switch (filtroPeriodo) {
             case 'total': return true;
             case 'dia':
-                if (!dataRelatorio) return false;
+                 if (!dataRelatorio) return false;
                 const dataFiltro = new Date(dataRelatorio);
-                dataFiltro.setUTCHours(0,0,0,0);
+                 dataFiltro.setUTCHours(0,0,0,0);
                 return itemDate.getTime() === dataFiltro.getTime();
             case 'semana':
                 const inicioSemana = new Date(hoje);
@@ -402,6 +452,9 @@ async function carregarRelatorios() {
         }
     }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
 
+    // ** ATUALIZA A VARIÁVEL GLOBAL COM OS DADOS FILTRADOS **
+    dadosRelatorioAtual.vendas = vendasPeriodoAtual;
+    dadosRelatorioAtual.despesas = despesasPeriodoAtual;
 
     // ---- INÍCIO DA ANÁLISE DE PRODUTOS (IA) ----
     const contagemProdutos = {};
@@ -417,8 +470,8 @@ async function carregarRelatorios() {
     });
 
     const rankingProdutos = Object.entries(contagemProdutos)
-        .sort(([, a], [, b]) => b - a) // Ordena pela quantidade (valor)
-        .slice(0, 5); // Pega os 5 produtos mais vendidos
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 5);
 
     const listaProdutosEl = document.getElementById("listaProdutosMaisVendidos");
     listaProdutosEl.innerHTML = '';
@@ -432,8 +485,6 @@ async function carregarRelatorios() {
             listaProdutosEl.appendChild(produtoDiv);
         });
     }
-    // ---- FIM DA ANÁLISE DE PRODUTOS ----
-
 
     // ---- Geração de Relatórios Resumo e Detalhes ----
     const listaVendasEl = document.getElementById("listaVendas");

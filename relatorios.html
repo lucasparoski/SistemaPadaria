@@ -32,10 +32,16 @@
           <button onclick="carregarRelatorios()" class="btn-secondary" style="margin-top: 15px;">Aplicar Filtro</button>
         </div>
       </div>
+      
+      <div class="card">
+        <h3>🤖 Análise com Inteligência Artificial</h3>
+        <p>Clique no botão abaixo para formatar e copiar os dados de vendas do período selecionado. Depois, cole no ChatGPT ou outra IA para obter uma análise detalhada.</p>
+        <button id="btnCopiarAnalise" onclick="copiarAnaliseParaIA()" class="btn-primary">Copiar Análise para IA</button>
+      </div>
 
       <div class="card">
         <h3>🏆 Análise de Produtos (IA)</h3>
-        <p>Produtos mais vendidos no período selecionado.</p>
+        <p>Produtos mais vendidos no período selecionado (contagem interna).</p>
         <div id="listaProdutosMaisVendidos" class="lista-itens">
             <p>Nenhuma venda no período para analisar.</p>
         </div>
