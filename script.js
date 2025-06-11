@@ -43,7 +43,6 @@ function normalizarNomeProduto(nome) {
 
 
 // -------- Usuários ---------
-// ... (código de usuário sem alterações)
 async function getUsuarios() {
     try {
         const snapshot = await db.collection("usuarios").get();
@@ -130,7 +129,6 @@ function limparCamposCadastro() {
 
 
 // -------- LÓGICA DE VENDAS (CARRINHO) ---------
-// ... (código de vendas sem alterações)
 let pedidoAtual = JSON.parse(sessionStorage.getItem('pedidoAtual')) || [];
 
 function adicionarItem() {
@@ -254,7 +252,6 @@ function mostrarMensagemVenda(msg) {
 
 
 // -------- Despesas ---------
-// ... (código de despesas sem alterações)
 async function salvarDespesa(despesa) {
     try {
         await db.collection("despesas").add(despesa);
@@ -313,25 +310,12 @@ function sugerirCategoriaDespesa() {
     const categoriaSelect = document.getElementById("despesaCategoria");
 
     let categoriaSugerida = "";
-    if (descricaoInput.includes("farinha") || descricaoInput.includes("trigo") || descricaoInput.includes("fermento") ||
-        descricaoInput.includes("acucar") || descricaoInput.includes("ovo") || descricaoInput.includes("leite") ||
-        descricaoInput.includes("chocolate") || descricaoInput.includes("manteiga")) {
+    if (descricaoInput.includes("farinha") || descricaoInput.includes("trigo") || descricaoInput.includes("fermento")) {
         categoriaSugerida = "Ingredientes";
-    } else if (descricaoInput.includes("aluguel") || descricaoInput.includes("locacao")) {
+    } else if (descricaoInput.includes("aluguel")) {
         categoriaSugerida = "Aluguel";
-    } else if (descricaoInput.includes("salario") || descricaoInput.includes("funcionario") || descricaoInput.includes("pagamento")) {
+    } else if (descricaoInput.includes("salario")) {
         categoriaSugerida = "Salarios";
-    } else if (descricaoInput.includes("agua") || descricaoInput.includes("luz") || descricaoInput.includes("energia") ||
-               descricaoInput.includes("gas") || descricaoInput.includes("telefone") || descricaoInput.includes("internet")) {
-        categoriaSugerida = "Contas de Consumo";
-    } else if (descricaoInput.includes("manutencao") || descricaoInput.includes("reparo") || descricaoInput.includes("conserto")) {
-        categoriaSugerida = "Manutencao";
-    } else if (descricaoInput.includes("anuncio") || descricaoInput.includes("publicidade") || descricaoInput.includes("panfleto")) {
-        categoriaSugerida = "Marketing";
-    } else if (descricaoInput.includes("gasolina") || descricaoInput.includes("combustivel") || descricaoInput.includes("frete")) {
-        categoriaSugerida = "Transporte";
-    } else if (descricaoInput.includes("imposto") || descricaoInput.includes("taxa") || descricaoInput.includes("contribuicao")) {
-        categoriaSugerida = "Impostos";
     }
 
     if (categoriaSugerida) {
@@ -340,7 +324,7 @@ function sugerirCategoriaDespesa() {
 }
 
 
-// -------- NOVA FUNÇÃO PARA COPIAR ANÁLISE PARA IA --------
+// -------- FUNÇÃO PARA COPIAR ANÁLISE (ATUALIZADA) --------
 async function copiarAnaliseParaIA() {
     const botao = document.getElementById('btnCopiarAnalise');
     if (dadosRelatorioAtual.vendas.length === 0) {
@@ -348,13 +332,32 @@ async function copiarAnaliseParaIA() {
         return;
     }
 
-    // Formata os dados de vendas para texto
+    // **INÍCIO DA CORREÇÃO**
+    // Formata os dados de vendas, lidando com ambos os formatos (antigo e novo)
     const dadosFormatados = dadosRelatorioAtual.vendas.map(venda => {
-        const itens = venda.itens.map(item => `${item.unidade}x ${item.nome}`).join(', ');
-        return `- Em ${formatarDataHora(venda.DataHora)}, pedido de ${formatarMoeda(venda.valorTotal)} via ${venda.formaPagamento}. Itens: ${itens}.`;
-    }).join('\n');
+        let itensTexto;
+        let valorTotal;
 
-    // Cria o prompt completo
+        // Verifica se é o formato NOVO (com array 'itens')
+        if (venda.itens && Array.isArray(venda.itens)) {
+            itensTexto = venda.itens.map(item => `${item.unidade}x ${item.nome}`).join(', ');
+            valorTotal = venda.valorTotal;
+        } 
+        // Senão, trata como formato ANTIGO
+        else if (venda.Item && venda.Unidade) {
+            itensTexto = `${venda.Unidade}x ${venda.Item}`;
+            valorTotal = venda.Unidade * venda.ValorUnitario;
+        }
+        // Caso não seja nenhum dos formatos conhecidos
+        else {
+            itensTexto = "Itens não identificados";
+            valorTotal = 0;
+        }
+
+        return `- Em ${formatarDataHora(venda.DataHora)}, pedido de ${formatarMoeda(valorTotal)} via ${venda.FormaPagamento || 'N/I'}. Itens: ${itensTexto}.`;
+    }).join('\n');
+    // **FIM DA CORREÇÃO**
+
     const promptParaIA = `
 Por favor, analise os seguintes dados brutos de vendas de uma padaria.
 
@@ -369,15 +372,14 @@ Com base nos dados fornecidos, responda às seguintes perguntas:
 4.  **Insights e Sugestões:** Você identifica algum padrão interessante? (Ex: produtos que são vendidos juntos, horários de pico, etc.). Baseado nisso, você tem alguma sugestão para a padaria?
 `;
 
-    // Copia para a área de transferência
     try {
         await navigator.clipboard.writeText(promptParaIA.trim());
         const textoOriginal = botao.innerText;
         botao.innerText = "Copiado com Sucesso!";
-        botao.style.backgroundColor = '#4CAF50'; // Verde sucesso
+        botao.style.backgroundColor = '#4CAF50';
         setTimeout(() => {
             botao.innerText = textoOriginal;
-            botao.style.backgroundColor = ''; // Volta à cor original
+            botao.style.backgroundColor = '';
         }, 3000);
     } catch (err) {
         console.error('Erro ao copiar para a área de transferência:', err);
@@ -452,20 +454,24 @@ async function carregarRelatorios() {
         }
     }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
 
-    // ** ATUALIZA A VARIÁVEL GLOBAL COM OS DADOS FILTRADOS **
     dadosRelatorioAtual.vendas = vendasPeriodoAtual;
     dadosRelatorioAtual.despesas = despesasPeriodoAtual;
 
-    // ---- INÍCIO DA ANÁLISE DE PRODUTOS (IA) ----
     const contagemProdutos = {};
     vendasPeriodoAtual.forEach(venda => {
-        if (venda.itens && venda.itens.length > 0) {
+        if (venda.itens && Array.isArray(venda.itens)) {
             venda.itens.forEach(item => {
                 const nomeNormalizado = normalizarNomeProduto(item.nome);
                 if (nomeNormalizado) {
                     contagemProdutos[nomeNormalizado] = (contagemProdutos[nomeNormalizado] || 0) + item.unidade;
                 }
             });
+        }
+        else if (venda.Item && venda.Unidade) {
+             const nomeNormalizado = normalizarNomeProduto(venda.Item);
+             if (nomeNormalizado) {
+                contagemProdutos[nomeNormalizado] = (contagemProdutos[nomeNormalizado] || 0) + venda.Unidade;
+             }
         }
     });
 
@@ -486,10 +492,12 @@ async function carregarRelatorios() {
         });
     }
 
-    // ---- Geração de Relatórios Resumo e Detalhes ----
     const listaVendasEl = document.getElementById("listaVendas");
     listaVendasEl.innerHTML = '';
-    const totalVendasValor = vendasPeriodoAtual.reduce((acc, venda) => acc + (venda.valorTotal || 0), 0);
+    const totalVendasValor = vendasPeriodoAtual.reduce((acc, venda) => {
+        const valor = venda.valorTotal || (venda.Unidade * venda.ValorUnitario) || 0;
+        return acc + valor;
+    }, 0);
 
     if (vendasPeriodoAtual.length === 0) {
         listaVendasEl.innerHTML = '<p>Nenhum pedido registrado neste período.</p>';
@@ -497,21 +505,29 @@ async function carregarRelatorios() {
         vendasPeriodoAtual.forEach(venda => {
             const vendaItemDiv = document.createElement('div');
             vendaItemDiv.classList.add('relatorio-item', 'card');
-            const itensHtml = venda.itens && venda.itens.length > 0
-                ? venda.itens.map(item => `
+            
+            let itensHtml;
+            let valorTotal;
+
+            if (venda.itens && Array.isArray(venda.itens)) {
+                itensHtml = venda.itens.map(item => `
                     <p style="margin-left: 15px; border-left: 2px solid #ddd; padding-left: 10px;">
                         ${item.unidade}x ${item.nome} - Subtotal: ${formatarMoeda(item.unidade * item.valorUnitario)}
                     </p>
-                `).join('')
-                : '<p style="margin-left: 15px;">Nenhum item detalhado.</p>';
+                `).join('');
+                valorTotal = venda.valorTotal;
+            } else if (venda.Item && venda.Unidade) {
+                itensHtml = `<p style="margin-left: 15px;">${venda.Unidade}x ${venda.Item}</p>`;
+                valorTotal = venda.Unidade * venda.ValorUnitario;
+            }
 
             vendaItemDiv.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
                     <div>
                         <p><strong>Data:</strong> ${formatarDataHora(venda.DataHora)}</p>
-                        <p><strong>Pagamento:</strong> ${venda.formaPagamento || 'Não Informado'}</p>
+                        <p><strong>Pagamento:</strong> ${venda.FormaPagamento || 'Não Informado'}</p>
                     </div>
-                    <p style="font-size: 1.2em;"><strong>Total: ${formatarMoeda(venda.valorTotal)}</strong></p>
+                    <p style="font-size: 1.2em;"><strong>Total: ${formatarMoeda(valorTotal)}</strong></p>
                 </div>
                 <div>
                     <p><strong>Itens do Pedido:</strong></p>
