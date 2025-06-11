@@ -25,86 +25,93 @@ body {
   font-family: 'Quicksand', 'Segoe UI', 'Arial Rounded MT Bold', 'Inter', sans-serif;
   background: var(--cor-fundo-claro);
   display: flex;
-  flex-direction: column; /* Necessário para o cabeçalho fixo e o conteúdo abaixo */
+  flex-direction: column; 
   min-height: 100vh;
   margin: 0;
   color: var(--cor-texto-escuro);
-  /* Ajuste para o conteúdo principal para que não fique por baixo do cabeçalho fixo */
-  padding-top: 100px; /* Ajuste este valor se o cabeçalho ficar mais alto/baixo */
-  padding-bottom: 20px; /* Adiciona um pouco de padding na parte inferior */
+  padding-top: 100px; 
+  padding-bottom: 20px;
+}
+
+/* NOVO: Wrapper para centralizar e limitar a largura das páginas simples */
+.main-content-wrapper {
+    width: 100%;
+    max-width: 800px; /* Largura máxima para o conteúdo */
+    margin: 0 auto; /* Centraliza o wrapper na horizontal */
+    padding: 0 15px; /* Adiciona um respiro nas laterais em telas pequenas */
+    box-sizing: border-box;
 }
 
 /* Estilos para o novo cabeçalho fixo */
 .main-header {
-    background-color: var(--cor-primaria); /* Usa a cor primária para o fundo do cabeçalho */
-    color: var(--cor-texto-claro); /* Texto claro para contraste */
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-claro);
     padding: 15px 20px;
     width: 100%;
-    position: fixed; /* Torna o cabeçalho fixo na parte superior */
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     display: flex;
-    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    justify-content: flex-start;
     align-items: center;
-    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
+    box-sizing: border-box;
 }
 
 .header-content {
-    max-width: 1200px; /* Aumenta a largura para comportar o conteúdo alinhado à esquerda */
+    max-width: 1200px;
     width: 100%;
-    text-align: left; /* Alinha o texto à esquerda */
-    margin: 0 auto; /* Centraliza o conteúdo dentro do cabeçalho */
+    text-align: left;
+    margin: 0 auto;
 }
 
 .header-title-group {
     display: flex;
-    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 0;
 }
 
-.header-logo { /* Estilo para o logo */
-    height: 70px; /* AUMENTADO: Tamanho da logo */
+.header-logo {
+    height: 70px;
     margin-right: 15px;
     vertical-align: middle;
 }
 
-.header-text-group { /* Agrupa o título e slogan */
+.header-text-group {
     display: flex;
-    align-items: baseline; /* Alinha pela base do texto */
+    align-items: baseline;
 }
 
 .header-bakery-name {
     font-family: 'Quicksand', cursive;
-    font-size: 2.8em; /* Tamanho maior para o nome da padaria */
+    font-size: 2.8em;
     margin: 0;
     color: var(--cor-terciaria);
-    margin-right: 15px; /* Adiciona espaço para o separador */
+    margin-right: 15px;
 }
 
-/* Estilo para o separador */
 .header-separator {
-    height: 1.8em; /* Altura aproximada do texto */
-    border-left: 1px solid var(--cor-terciaria); /* Linha vertical clara */
+    height: 1.8em;
+    border-left: 1px solid var(--cor-terciaria);
     margin-right: 15px;
 }
 
 .header-slogan {
-    font-size: 2.6em; /* Tamanho da fonte do slogan */
+    font-size: 2.6em;
     margin: 0;
     opacity: 0.9;
     color: var(--cor-fundo-claro);
 }
 
-/* CONTAINER PRINCIPAL DO LAYOUT DE DUAS COLUNAS */
+/* CONTAINER PRINCIPAL DO LAYOUT DE DUAS COLUNAS (DASHBOARD) */
 .main-content-wrapper-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    max-width: 1200px; /* Largura máxima para o layout de duas colunas (acomoda 3 cards horiz.) */
+    max-width: 1200px;
     margin: 40px auto 20px auto;
     padding: 0 20px;
     gap: 40px;
@@ -116,7 +123,7 @@ body {
     min-width: 280px;
     text-align: left;
     margin-top: 50px;
-    margin-bottom: 0px; /* REDUZIDO: Menos espaço abaixo da mensagem */
+    margin-bottom: 0px;
 }
 
 .welcome-message {
@@ -135,7 +142,7 @@ body {
 
 /* Seção de ações (coluna da direita) */
 .actions-section-container {
-    flex: 0 0 700px; /* Largura fixa para a coluna de cards, para 3 cards horizontais */
+    flex: 0 0 700px;
     background: var(--cor-terciaria);
     border-radius: 18px;
     padding: 30px;
@@ -154,10 +161,10 @@ body {
 
 .action-cards-wrapper {
     display: flex;
-    flex-direction: row; /* Cards na horizontal */
-    flex-wrap: wrap; /* Permite que quebrem linha em telas menores */
-    justify-content: center; /* Centraliza os cards quando houver espaço */
-    gap: 20px; /* Espaçamento entre os cards */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
     margin-bottom: 25px;
 }
@@ -171,11 +178,11 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 200px; /* Largura base para cada card */
-    min-height: 180px; /* Ajuste a altura mínima */
+    width: 200px;
+    min-height: 180px;
     transition: var(--transicao-rapida);
     border: 1px solid rgba(0,0,0,0.1);
-    box-sizing: border-box; /* Inclui padding e border na largura */
+    box-sizing: border-box;
 }
 
 .action-card:hover {
@@ -230,12 +237,13 @@ body {
   box-shadow: var(--sombra-suave);
   text-align: center;
   transition: var(--transicao-rapida);
+  margin-top: 20px; /* Adiciona um espaço do topo */
 }
 .container:hover {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.bakery-title { /* Geral, para outras páginas (não a dashboard) */
+.bakery-title {
     font-family: 'Quicksand', cursive;
     font-size: 2.8em;
     color: var(--cor-primaria);
@@ -243,7 +251,7 @@ body {
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-.bakery-slogan { /* Geral, para outras páginas (não a dashboard) */
+.bakery-slogan {
     font-size: 1.2em;
     color: var(--cor-secundaria);
     margin-bottom: 40px;
@@ -251,7 +259,7 @@ body {
     opacity: 0.8;
 }
 
-h2, h3 { /* Geral, para outras páginas (h3 na dashboard tem estilos específicos) */
+h2, h3 {
   text-align: center;
   color: var(--cor-primaria);
   margin-top: 0;
@@ -286,12 +294,22 @@ input, select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%238B4513%22%20d%3D%22M287%2C197.3L153.6%2C64c-3.1-3.1-8.2-3.1-11.3%2C0L0%2C197.3c-3.1%2C3.1-3.1%2C8.2%2C0%2C11.3s8.2%2C3.1%2C11.3%2C0L148%2C87.3c3.1-3.1%2C8.2-3.1%2C11.3%2C0L275.7%2C208.6c3.1%2C3.1%2C8.2%2C3.1%2C11.3%2C0C290.1%2C205.5%2C290.1%2C200.4%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-  background-size: 14px;
-  padding-right: 40px;
 }
+
+/* Remove a seta customizada para inputs de número, para não conflitar */
+input[type="number"] {
+    background-image: none;
+    padding-right: 14px;
+}
+
+select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%238B4513%22%20d%3D%22M287%2C197.3L153.6%2C64c-3.1-3.1-8.2-3.1-11.3%2C0L0%2C197.3c-3.1%2C3.1-3.1%2C8.2%2C0%2C11.3s8.2%2C3.1%2C11.3%2C0L148%2C87.3c3.1-3.1%2C8.2-3.1%2C11.3%2C0L275.7%2C208.6c3.1%2C3.1%2C8.2%2C3.1%2C11.3%2C0C290.1%2C205.5%2C290.1%2C200.4%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 14px;
+    padding-right: 40px;
+}
+
 
 input::placeholder {
   color: var(--cor-texto-escuro);
@@ -332,7 +350,7 @@ button {
 }
 
 .btn-primary:hover {
-  background-color: var(--cor-primaria-clara); /* Usando o tom mais claro */
+  background-color: var(--cor-primaria-clara);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
@@ -372,14 +390,6 @@ button {
   font-size: 1.05em;
 }
 
-/* Cores das mensagens (definidas no JS) */
-#mensagem.success, #mensagemCadastro.success, #mensagemVenda.success, #mensagemDespesa.success {
-    color: var(--cor-sucesso);
-}
-#mensagem.error, #mensagemCadastro.error, #mensagemVenda.error, #mensagemDespesa.error {
-    color: var(--cor-erro);
-}
-
 .relatorio-section {
     padding: 20px;
     border-bottom: 1px dashed rgba(0,0,0,0.15);
@@ -412,16 +422,6 @@ button {
     color: var(--cor-texto-escuro);
 }
 
-.relatorio-info p {
-    font-size: 1em;
-    margin: 8px 0;
-}
-
-.relatorio-info strong {
-    color: var(--cor-primaria);
-}
-
-
 .filters-section label, .filters-section select, .filters-section input[type="date"] {
     margin-bottom: 15px;
 }
@@ -435,11 +435,14 @@ button {
     font-size: 1.05em;
 }
 
+.lista-itens {
+    min-height: 50px;
+}
 
 /* Media Queries para Responsividade */
-@media (max-width: 992px) { /* Ajusta o layout para tablets maiores e telas menores de desktop */
+@media (max-width: 992px) {
     .main-content-wrapper-layout {
-        flex-direction: column; /* Empilha as seções em coluna */
+        flex-direction: column;
         gap: 20px;
         align-items: center;
     }
@@ -462,29 +465,29 @@ button {
     .actions-section-container {
         flex: none;
         width: 100%;
-        max-width: 600px; /* Permite que os 3 cards fiquem horizontalmente se tiver espaço */
+        max-width: 600px;
         padding: 25px;
     }
 
     .action-cards-wrapper {
-        justify-content: space-around; /* Distribui os cards na horizontal */
+        justify-content: space-around;
     }
 
     .action-card {
-        width: 180px; /* Largura menor para cada card em telas menores */
+        width: 180px;
         min-height: 160px;
         padding: 20px;
     }
 }
 
-@media (max-width: 768px) { /* Ajusta para tablets e smartphones maiores */
+@media (max-width: 768px) {
     body {
         padding-top: 80px;
     }
     .main-header {
         padding: 10px 15px;
     }
-    .header-logo { /* Ajuste do logo em telas menores */
+    .header-logo {
         height: 35px;
         margin-right: 10px;
     }
@@ -492,8 +495,8 @@ button {
         font-size: 2em;
     }
     .header-slogan {
-        font-size: 1.8em; /* Mantém o tamanho em telas menores para consistência */
-        margin-left: 10px; /* Ajusta a margem do slogan em telas menores para ficar ao lado */
+        font-size: 1.8em;
+        margin-left: 10px;
     }
     .welcome-message {
         font-size: 2.5em;
@@ -502,25 +505,25 @@ button {
         font-size: 1.6em;
     }
     .action-card {
-        width: 48%; /* Duas cards por linha */
-        margin-bottom: 15px; /* Espaçamento entre as linhas de cards */
+        width: 48%;
+        margin-bottom: 15px;
     }
     .action-cards-wrapper {
-        gap: 15px; /* Reduz o espaçamento entre cards */
+        gap: 15px;
     }
 }
 
-@media (max-width: 480px) { /* Ajusta para smartphones */
+@media (max-width: 480px) {
     body {
         padding-top: 90px;
     }
     .main-header {
-        flex-direction: column; /* Empilha logo/nome e slogan */
+        flex-direction: column;
         padding: 10px;
-        align-items: flex-start; /* Alinha tudo à esquerda */
+        align-items: flex-start;
     }
     .header-title-group {
-        flex-direction: row; /* Mantém logo e nome na mesma linha */
+        flex-direction: row;
         align-items: center;
         margin-bottom: 5px;
     }
@@ -532,15 +535,15 @@ button {
         font-size: 1.8em;
     }
     .header-slogan {
-        font-size: 1.6em; /* Mantém o tamanho em telas pequenas também */
-        margin-left: 0; /* Remove a margem para telas muito pequenas, para ficar logo ao lado */
-        margin-top: 5px; /* Adiciona uma pequena margem superior se empilhar para a linha de cima */
+        font-size: 1.6em;
+        margin-left: 0;
+        margin-top: 5px;
     }
     .welcome-message {
         font-size: 2em;
     }
     .action-card {
-        width: 100%; /* Uma card por linha */
+        width: 100%;
         min-height: 140px;
         padding: 15px;
     }
