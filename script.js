@@ -15,15 +15,17 @@ const db = app.firestore();
 
 // -------- Funções de Utilidade --------
 function formatarDataHora(isoString) {
+    if (!isoString) return 'Data inválida';
     const date = new Date(isoString);
     return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
 function formatarMoeda(valor) {
+    if (typeof valor !== 'number') return 'R$ 0,00';
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// -------- Usuários (sem alterações) ---------
+// -------- Usuários ---------
 async function getUsuarios() {
     try {
         const snapshot = await db.collection("usuarios").get();
@@ -93,7 +95,7 @@ function mostrarMensagem(msg) {
     const el = document.getElementById("mensagem");
     const elCadastro = document.getElementById("mensagemCadastro");
 
-    if (elCadastro && !elCadastro.classList.contains('hidden')) {
+    if (elCadastro && !document.querySelector('.cadastro-box').classList.contains('hidden')) {
         elCadastro.innerText = msg;
         setTimeout(() => { elCadastro.innerText = "", elCadastro.style.color = "red"; }, 4000);
     } else if (el) {
@@ -108,9 +110,7 @@ function limparCamposCadastro() {
     document.getElementById("cadSenha").value = "";
 }
 
-// -------- LÓGICA DE VENDAS (CARRINHO) - MODIFICADO ---------
-
-// Array para armazenar os itens do pedido atual. Usamos sessionStorage para persistir entre recarregamentos da página.
+// -------- LÓGICA DE VENDAS (CARRINHO) ---------
 let pedidoAtual = JSON.parse(sessionStorage.getItem('pedidoAtual')) || [];
 
 function adicionarItem() {
@@ -133,19 +133,16 @@ function adicionarItem() {
         valorUnitario: valorUnitario
     });
 
-    // Salva o estado do pedido no sessionStorage
     sessionStorage.setItem('pedidoAtual', JSON.stringify(pedidoAtual));
-
     itemEl.value = "";
     unidadeEl.value = "";
     valorUnitarioEl.value = "";
-    itemEl.focus(); // Foco no campo do item para o próximo produto
-
+    itemEl.focus();
     atualizarVisualizacaoPedido();
 }
 
 function removerItem(index) {
-    pedidoAtual.splice(index, 1); // Remove o item do array pelo seu índice
+    pedidoAtual.splice(index, 1);
     sessionStorage.setItem('pedidoAtual', JSON.stringify(pedidoAtual));
     atualizarVisualizacaoPedido();
 }
@@ -153,7 +150,7 @@ function removerItem(index) {
 function atualizarVisualizacaoPedido() {
     const listaItensEl = document.getElementById("listaItensPedido");
     const valorTotalEl = document.getElementById("valorTotalPedido");
-    if (!listaItensEl || !valorTotalEl) return; // Não faz nada se os elementos não existirem na página
+    if (!listaItensEl || !valorTotalEl) return;
 
     listaItensEl.innerHTML = "";
     let valorTotalPedido = 0;
@@ -212,8 +209,8 @@ async function finalizarVenda() {
         mostrarMensagemVenda("Venda registrada com sucesso!");
         gerarRecibo(vendaCompleta);
 
-        pedidoAtual = []; // Limpa o array
-        sessionStorage.removeItem('pedidoAtual'); // Limpa o storage
+        pedidoAtual = [];
+        sessionStorage.removeItem('pedidoAtual');
         atualizarVisualizacaoPedido();
 
     } catch (e) {
@@ -235,7 +232,7 @@ function mostrarMensagemVenda(msg) {
     setTimeout(() => { el.innerText = ""; }, 4000);
 }
 
-// -------- Despesas (sem alterações) ---------
+// -------- Despesas ---------
 async function salvarDespesa(despesa) {
     try {
         await db.collection("despesas").add(despesa);
@@ -294,7 +291,6 @@ function sugerirCategoriaDespesa() {
     const categoriaSelect = document.getElementById("despesaCategoria");
 
     let categoriaSugerida = "";
-    // Lógica de sugestão... (mantida como estava)
     if (descricaoInput.includes("farinha") || descricaoInput.includes("trigo") || descricaoInput.includes("fermento") ||
         descricaoInput.includes("acucar") || descricaoInput.includes("ovo") || descricaoInput.includes("leite") ||
         descricaoInput.includes("chocolate") || descricaoInput.includes("manteiga")) {
@@ -321,9 +317,154 @@ function sugerirCategoriaDespesa() {
     }
 }
 
-// -------- Relatórios (sem alterações na lógica de carregamento por enquanto) ---------
-// ATENÇÃO: A exibição dos relatórios precisará ser ajustada para o novo formato de vendas com múltiplos itens.
-// Esta função ainda está no formato antigo.
+
+// -------- Relatórios (LÓGICA ATUALIZADA) ---------
 async function carregarRelatorios() {
-    // ... (código original de carregarRelatorios)
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    if (!usuarioLogado) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    const filtroPeriodo = document.getElementById("filtroPeriodo").value;
+    const dataRelatorio = document.getElementById("dataRelatorio").value;
+
+    // Carrega TODOS os dados do usuário do banco de dados
+    const todasVendasUsuario = await db.collection("vendas").where("UsuarioEmail", "==", usuarioLogado.Email).get().then(snapshot =>
+        snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    );
+    const todasDespesasUsuario = await db.collection("despesas").where("UsuarioEmail", "==", usuarioLogado.Email).get().then(snapshot =>
+        snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    );
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    // Filtra os dados com base no período selecionado
+    const vendasPeriodoAtual = todasVendasUsuario.filter(item => {
+        const itemDate = new Date(item.DataHora);
+        itemDate.setHours(0, 0, 0, 0);
+
+        switch (filtroPeriodo) {
+            case 'total':
+                return true;
+            case 'dia':
+                if (!dataRelatorio) return false;
+                const dataFiltro = new Date(dataRelatorio);
+                dataFiltro.setUTCHours(0,0,0,0);
+                return itemDate.getTime() === dataFiltro.getTime();
+            case 'semana':
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const fimSemana = new Date(inicioSemana);
+                fimSemana.setDate(inicioSemana.getDate() + 6);
+                return itemDate >= inicioSemana && itemDate <= fimSemana;
+            case 'mes':
+                return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
+            case 'ano':
+                return itemDate.getFullYear() === hoje.getFullYear();
+            default:
+                return true;
+        }
+    }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
+
+    const despesasPeriodoAtual = todasDespesasUsuario.filter(item => {
+        const itemDate = new Date(item.DataHora);
+        itemDate.setHours(0, 0, 0, 0);
+
+         switch (filtroPeriodo) {
+            case 'total':
+                return true;
+            case 'dia':
+                 if (!dataRelatorio) return false;
+                const dataFiltro = new Date(dataRelatorio);
+                 dataFiltro.setUTCHours(0,0,0,0);
+                return itemDate.getTime() === dataFiltro.getTime();
+            case 'semana':
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const fimSemana = new Date(inicioSemana);
+                fimSemana.setDate(inicioSemana.getDate() + 6);
+                return itemDate >= inicioSemana && itemDate <= fimSemana;
+            case 'mes':
+                return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
+            case 'ano':
+                return itemDate.getFullYear() === hoje.getFullYear();
+            default:
+                return true;
+        }
+    }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
+
+
+    // ---- Geração de Relatórios Resumo e Detalhes ----
+    const listaVendasEl = document.getElementById("listaVendas");
+    listaVendasEl.innerHTML = '';
+    
+    // ** MUDANÇA AQUI: Usa o campo `valorTotal` da venda **
+    const totalVendasValor = vendasPeriodoAtual.reduce((acc, venda) => acc + (venda.valorTotal || 0), 0);
+
+    if (vendasPeriodoAtual.length === 0) {
+        listaVendasEl.innerHTML = '<p>Nenhuma venda registrada neste período.</p>';
+    } else {
+        vendasPeriodoAtual.forEach(venda => {
+            const vendaItemDiv = document.createElement('div');
+            vendaItemDiv.classList.add('relatorio-item', 'card');
+
+            // ** MUDANÇA AQUI: Cria a lista de itens da venda **
+            const itensHtml = venda.itens && venda.itens.length > 0
+                ? venda.itens.map(item => `
+                    <p style="margin-left: 15px; border-left: 2px solid #ddd; padding-left: 10px;">
+                        ${item.unidade}x ${item.nome} - Subtotal: ${formatarMoeda(item.unidade * item.valorUnitario)}
+                    </p>
+                `).join('')
+                : '<p style="margin-left: 15px;">Nenhum item detalhado.</p>';
+
+            // ** MUDANÇA AQUI: Monta o card da venda completa **
+            vendaItemDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                    <div>
+                        <p><strong>Data:</strong> ${formatarDataHora(venda.DataHora)}</p>
+                        <p><strong>Pagamento:</strong> ${venda.formaPagamento || 'Não Informado'}</p>
+                    </div>
+                    <p style="font-size: 1.2em;"><strong>Total: ${formatarMoeda(venda.valorTotal)}</strong></p>
+                </div>
+                <div>
+                    <p><strong>Itens do Pedido:</strong></p>
+                    ${itensHtml}
+                </div>
+            `;
+            listaVendasEl.appendChild(vendaItemDiv);
+        });
+    }
+
+    const listaDespesasEl = document.getElementById("listaDespesas");
+    listaDespesasEl.innerHTML = '';
+    const totalDespesasValor = despesasPeriodoAtual.reduce((acc, despesa) => acc + (despesa.Valor || 0), 0);
+
+    if (despesasPeriodoAtual.length === 0) {
+        listaDespesasEl.innerHTML = '<p>Nenhuma despesa registrada neste período.</p>';
+    } else {
+        despesasPeriodoAtual.forEach(despesa => {
+            const despesaItemDiv = document.createElement('div');
+            despesaItemDiv.classList.add('relatorio-item', 'card');
+            despesaItemDiv.innerHTML = `
+                <p><strong>Descrição:</strong> ${despesa.Descricao}</p>
+                <p><strong>Categoria:</strong> ${despesa.Categoria || 'Não Informada'}</p>
+                <p><strong>Valor:</strong> ${formatarMoeda(despesa.Valor)}</p>
+                <p><strong>Data/Hora:</strong> ${formatarDataHora(despesa.DataHora)}</p>
+            `;
+            listaDespesasEl.appendChild(despesaItemDiv);
+        });
+    }
+
+    const balancoGeral = totalVendasValor - totalDespesasValor;
+
+    document.getElementById("totalVendas").innerText = vendasPeriodoAtual.length;
+    document.getElementById("valorTotalVendas").innerText = formatarMoeda(totalVendasValor);
+    document.getElementById("totalDespesas").innerText = despesasPeriodoAtual.length;
+    document.getElementById("valorTotalDespesas").innerText = formatarMoeda(totalDespesasValor);
+    document.getElementById("balancoGeral").innerText = formatarMoeda(balancoGeral);
+
+    const balancoEl = document.getElementById("balancoGeral");
+    balancoEl.style.color = balancoGeral >= 0 ? 'green' : 'red';
 }
