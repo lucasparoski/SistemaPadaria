@@ -25,6 +25,24 @@ function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+// -------- FUNÇÃO DE "IA" PARA NORMALIZAR NOMES DE PRODUTOS --------
+/**
+ * Normaliza o nome de um produto para contagem.
+ * Ex: "Pão Francês" -> "pao frances"
+ * @param {string} nome O nome do produto.
+ * @returns {string} O nome normalizado.
+ */
+function normalizarNomeProduto(nome) {
+    if (!nome) return '';
+    return nome
+        .toString()
+        .toLowerCase()
+        .trim()
+        .normalize('NFD') // Separa os acentos das letras
+        .replace(/[\u0300-\u036f]/g, ''); // Remove os acentos
+}
+
+
 // -------- Usuários ---------
 async function getUsuarios() {
     try {
@@ -329,7 +347,6 @@ async function carregarRelatorios() {
     const filtroPeriodo = document.getElementById("filtroPeriodo").value;
     const dataRelatorio = document.getElementById("dataRelatorio").value;
 
-    // Carrega TODOS os dados do usuário do banco de dados
     const todasVendasUsuario = await db.collection("vendas").where("UsuarioEmail", "==", usuarioLogado.Email).get().then(snapshot =>
         snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
     );
@@ -340,14 +357,12 @@ async function carregarRelatorios() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    // Filtra os dados com base no período selecionado
     const vendasPeriodoAtual = todasVendasUsuario.filter(item => {
         const itemDate = new Date(item.DataHora);
         itemDate.setHours(0, 0, 0, 0);
 
         switch (filtroPeriodo) {
-            case 'total':
-                return true;
+            case 'total': return true;
             case 'dia':
                 if (!dataRelatorio) return false;
                 const dataFiltro = new Date(dataRelatorio);
@@ -359,26 +374,21 @@ async function carregarRelatorios() {
                 const fimSemana = new Date(inicioSemana);
                 fimSemana.setDate(inicioSemana.getDate() + 6);
                 return itemDate >= inicioSemana && itemDate <= fimSemana;
-            case 'mes':
-                return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
-            case 'ano':
-                return itemDate.getFullYear() === hoje.getFullYear();
-            default:
-                return true;
+            case 'mes': return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
+            case 'ano': return itemDate.getFullYear() === hoje.getFullYear();
+            default: return true;
         }
     }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
 
     const despesasPeriodoAtual = todasDespesasUsuario.filter(item => {
         const itemDate = new Date(item.DataHora);
         itemDate.setHours(0, 0, 0, 0);
-
          switch (filtroPeriodo) {
-            case 'total':
-                return true;
+            case 'total': return true;
             case 'dia':
-                 if (!dataRelatorio) return false;
+                if (!dataRelatorio) return false;
                 const dataFiltro = new Date(dataRelatorio);
-                 dataFiltro.setUTCHours(0,0,0,0);
+                dataFiltro.setUTCHours(0,0,0,0);
                 return itemDate.getTime() === dataFiltro.getTime();
             case 'semana':
                 const inicioSemana = new Date(hoje);
@@ -386,31 +396,56 @@ async function carregarRelatorios() {
                 const fimSemana = new Date(inicioSemana);
                 fimSemana.setDate(inicioSemana.getDate() + 6);
                 return itemDate >= inicioSemana && itemDate <= fimSemana;
-            case 'mes':
-                return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
-            case 'ano':
-                return itemDate.getFullYear() === hoje.getFullYear();
-            default:
-                return true;
+            case 'mes': return itemDate.getMonth() === hoje.getMonth() && itemDate.getFullYear() === hoje.getFullYear();
+            case 'ano': return itemDate.getFullYear() === hoje.getFullYear();
+            default: return true;
         }
     }).sort((a, b) => new Date(b.DataHora) - new Date(a.DataHora));
+
+
+    // ---- INÍCIO DA ANÁLISE DE PRODUTOS (IA) ----
+    const contagemProdutos = {};
+    vendasPeriodoAtual.forEach(venda => {
+        if (venda.itens && venda.itens.length > 0) {
+            venda.itens.forEach(item => {
+                const nomeNormalizado = normalizarNomeProduto(item.nome);
+                if (nomeNormalizado) {
+                    contagemProdutos[nomeNormalizado] = (contagemProdutos[nomeNormalizado] || 0) + item.unidade;
+                }
+            });
+        }
+    });
+
+    const rankingProdutos = Object.entries(contagemProdutos)
+        .sort(([, a], [, b]) => b - a) // Ordena pela quantidade (valor)
+        .slice(0, 5); // Pega os 5 produtos mais vendidos
+
+    const listaProdutosEl = document.getElementById("listaProdutosMaisVendidos");
+    listaProdutosEl.innerHTML = '';
+    if (rankingProdutos.length === 0) {
+        listaProdutosEl.innerHTML = '<p>Nenhuma venda no período para analisar.</p>';
+    } else {
+        rankingProdutos.forEach(([nome, quantidade]) => {
+            const produtoDiv = document.createElement('div');
+            produtoDiv.classList.add('relatorio-item');
+            produtoDiv.innerHTML = `<p><strong>${nome.charAt(0).toUpperCase() + nome.slice(1)}:</strong> ${quantidade} unidades vendidas</p>`;
+            listaProdutosEl.appendChild(produtoDiv);
+        });
+    }
+    // ---- FIM DA ANÁLISE DE PRODUTOS ----
 
 
     // ---- Geração de Relatórios Resumo e Detalhes ----
     const listaVendasEl = document.getElementById("listaVendas");
     listaVendasEl.innerHTML = '';
-    
-    // ** MUDANÇA AQUI: Usa o campo `valorTotal` da venda **
     const totalVendasValor = vendasPeriodoAtual.reduce((acc, venda) => acc + (venda.valorTotal || 0), 0);
 
     if (vendasPeriodoAtual.length === 0) {
-        listaVendasEl.innerHTML = '<p>Nenhuma venda registrada neste período.</p>';
+        listaVendasEl.innerHTML = '<p>Nenhum pedido registrado neste período.</p>';
     } else {
         vendasPeriodoAtual.forEach(venda => {
             const vendaItemDiv = document.createElement('div');
             vendaItemDiv.classList.add('relatorio-item', 'card');
-
-            // ** MUDANÇA AQUI: Cria a lista de itens da venda **
             const itensHtml = venda.itens && venda.itens.length > 0
                 ? venda.itens.map(item => `
                     <p style="margin-left: 15px; border-left: 2px solid #ddd; padding-left: 10px;">
@@ -419,7 +454,6 @@ async function carregarRelatorios() {
                 `).join('')
                 : '<p style="margin-left: 15px;">Nenhum item detalhado.</p>';
 
-            // ** MUDANÇA AQUI: Monta o card da venda completa **
             vendaItemDiv.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
                     <div>
