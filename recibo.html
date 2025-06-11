@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recibo - Sistema Padaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/SistemaPadaria/style.css" />
+    <style>
+        /* Estilos específicos para a impressão do recibo */
+        body {
+            background-color: #fff;
+            color: #000;
+            font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada para alinhar melhor */
+        }
+
+        /* Esconde elementos da interface principal na impressão */
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+
+        #recibo-wrapper {
+            max-width: 320px; /* Largura similar a de uma impressora térmica */
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px dashed #333;
+        }
+
+        #recibo-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #recibo-header h3, #recibo-header p {
+            margin: 2px 0;
+        }
+
+        #recibo-itens p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #recibo-totais {
+            margin-top: 15px;
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+        }
+
+        #recibo-totais p {
+            margin: 5px 0;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #recibo-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="recibo-wrapper">
+        <div id="recibo-header">
+            <h3>Padaria Nova Esperança</h3>
+            <p>RECIBO DE VENDA (NÃO FISCAL)</p>
+            <p>Data: <span id="reciboData"></span></p>
+        </div>
+
+        <div id="recibo-itens">
+            </div>
+
+        <div id="recibo-totais">
+            <p><span>TOTAL:</span><span id="reciboTotal"></span></p>
+            <p><span>Pagamento:</span><span id="reciboPagamento"></span></p>
+        </div>
+
+        <div id="recibo-footer">
+            <p>Obrigado pela sua preferência!</p>
+        </div>
+    </div>
+
+    <div class="container no-print" style="text-align: center; max-width: 320px; margin: auto; border: none; box-shadow: none;">
+        <button onclick="window.print()" class="btn-primary">Imprimir</button>
+        <button onclick="window.close()" class="btn-secondary">Fechar</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const dadosVenda = JSON.parse(sessionStorage.getItem('dadosRecibo'));
+            if (!dadosVenda) {
+                document.getElementById('recibo-wrapper').innerHTML = '<p>Nenhum dado de venda encontrado.</p>';
+                return;
+            };
+
+            // Formata a data e hora
+            const dataHora = new Date(dadosVenda.DataHora);
+            document.getElementById('reciboData').innerText = dataHora.toLocaleDateString('pt-BR') + ' ' + dataHora.toLocaleTimeString('pt-BR');
+
+            // Formata a moeda
+            const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // Preenche os totais
+            document.getElementById('reciboTotal').innerText = formatarMoeda(dadosVenda.valorTotal);
+            document.getElementById('reciboPagamento').innerText = dadosVenda.formaPagamento;
+
+            // Preenche os itens
+            const itensContainer = document.getElementById('recibo-itens');
+            itensContainer.innerHTML = ''; // Limpa antes de adicionar
+            dadosVenda.itens.forEach(item => {
+                const itemHtml = `
+                    <p>
+                        <span>${item.unidade}x ${item.nome}</span>
+                        <span>${formatarMoeda(item.unidade * item.valorUnitario)}</span>
+                    </p>
+                `;
+                itensContainer.innerHTML += itemHtml;
+            });
+
+            // Remove os dados para não usar novamente
+            sessionStorage.removeItem('dadosRecibo');
+
+            // Aciona a impressão automaticamente
+            window.print();
+        };
+    </script>
+</body>
+</html>
