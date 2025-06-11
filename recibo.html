@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recibo - Sistema Padaria</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/SistemaPadaria/style.css" />
+    <link rel="stylesheet" href="style.css" />
     <style>
         /* Estilos específicos para a impressão do recibo */
         body {
             background-color: #fff;
             color: #000;
-            font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada para alinhar melhor */
+            font-family: 'Courier New', Courier, monospace;
         }
 
         /* Esconde elementos da interface principal na impressão */
@@ -22,7 +22,7 @@
         }
 
         #recibo-wrapper {
-            max-width: 320px; /* Largura similar a de uma impressora térmica */
+            max-width: 320px;
             margin: 20px auto;
             padding: 15px;
             border: 1px dashed #333;
@@ -98,20 +98,16 @@
                 return;
             };
 
-            // Formata a data e hora
             const dataHora = new Date(dadosVenda.DataHora);
             document.getElementById('reciboData').innerText = dataHora.toLocaleDateString('pt-BR') + ' ' + dataHora.toLocaleTimeString('pt-BR');
 
-            // Formata a moeda
             const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-            // Preenche os totais
             document.getElementById('reciboTotal').innerText = formatarMoeda(dadosVenda.valorTotal);
             document.getElementById('reciboPagamento').innerText = dadosVenda.formaPagamento;
 
-            // Preenche os itens
             const itensContainer = document.getElementById('recibo-itens');
-            itensContainer.innerHTML = ''; // Limpa antes de adicionar
+            itensContainer.innerHTML = '';
             dadosVenda.itens.forEach(item => {
                 const itemHtml = `
                     <p>
@@ -121,11 +117,8 @@
                 `;
                 itensContainer.innerHTML += itemHtml;
             });
-
-            // Remove os dados para não usar novamente
+            
             sessionStorage.removeItem('dadosRecibo');
-
-            // Aciona a impressão automaticamente
             window.print();
         };
     </script>

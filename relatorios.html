@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Relatórios - Sistema Padaria</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/SistemaPadaria/style.css" /> </head>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
-  <div class="main-content-wrapper"> <div class="container">
+  <div class="main-content-wrapper">
+    <div class="container">
       <h2 class="bakery-title">Relatórios</h2>
 
       <div class="card">
@@ -57,9 +59,11 @@
 
       <button onclick="voltarDashboard()" class="btn-secondary">Voltar ao Menu</button>
     </div>
-  </div> <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
-  <script src="/SistemaPadaria/script.js"></script> <script>
+  <script src="script.js"></script>
+  <script>
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     if (!usuarioLogado) {
       window.location.href = "index.html";
@@ -69,7 +73,6 @@
       window.location.href = "dashboard.html";
     }
 
-    // Função para alternar a visibilidade do campo de data
     function alternarFiltroData() {
         const filtroPeriodo = document.getElementById("filtroPeriodo").value;
         const filtroDataEspecificaDiv = document.getElementById("filtroDataEspecifica");
@@ -77,19 +80,18 @@
             filtroDataEspecificaDiv.style.display = 'block';
         } else {
             filtroDataEspecificaDiv.style.display = 'none';
-            document.getElementById("dataRelatorio").value = ''; // Limpa a data ao mudar o filtro
+            document.getElementById("dataRelatorio").value = '';
         }
     }
 
-    // Define a data atual como valor padrão no input de data ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         document.getElementById("dataRelatorio").value = `${year}-${month}-${day}`;
-        alternarFiltroData(); // Para garantir que o campo de data aparece se o filtro inicial for 'dia'
-        carregarRelatorios(); // Carrega os relatórios ao iniciar
+        alternarFiltroData();
+        carregarRelatorios();
     });
   </script>
 </body>
